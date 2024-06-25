@@ -1,4 +1,5 @@
 // first commit
+import Dagre from "@dagrejs/dagre";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,6 +12,24 @@ import { Handle, Position, useReactFlow } from "reactflow";
 
 // import LogicNodes from "./LogicNodes";
 // import { LogicNodes } from "./LogicNodes";
+const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
+
+const getLayoutedElements = (nodes, edges, options) => {
+  const nodesCopy = nodes.map((node) => ({ ...node }));
+  const edgesCopy = edges.map((edge) => ({ ...edge }));
+  g.setGraph({ rankdir: options.direction });
+  edgesCopy.forEach((edge) => g.setEdge(edge.source, edge.target));
+  nodesCopy.forEach((node) => g.setNode(node.id, node));
+  Dagre.layout(g);
+  nodesCopy.forEach((node) => {
+    const { x, y } = g.node(node.id);
+    node.position = { ...node.position, x, y };
+  });
+  return {
+    nodes: nodesCopy,
+    edges: edgesCopy,
+  };
+};
 
 //ye id jo hum parameter mein de rhe hein wo reactflow khud detect kar rha hai
 //......reactflow ke andar ek parameter pass kr rkha hai nodetypes naam ka aur wo ek object leta hai
@@ -20,9 +39,20 @@ export function FlowBlockTemplate({ id, data }) {
   const dispatch = useDispatch();
   const nodes = Object.seal(useSelector((state) => state.rf.nodes));
   const edges = Object.seal(useSelector((state) => state.rf.edges));
-
-  const userinputbox = document.getElementById("userinputbox");
   var [count, setcount] = useState(1);
+  const onLayout = useCallback(
+    (direction) => {
+      const layouted = getLayoutedElements(nodes, edges, { direction });
+      dispatch(applyNodeChanges({ changes: [...layouted.nodes] }));
+      dispatch(applyEdgeChanges({ changes: [...layouted.edges] }));
+      window.requestAnimationFrame(() => {
+        fitView();
+      });
+    },
+    [nodes, edges]
+  );
+  const userinputbox = document.getElementById("userinputbox");
+
   useEffect(() => {
     setTimeout(() => {
       userinputbox?.focus({ preventScroll: true });
@@ -30,7 +60,7 @@ export function FlowBlockTemplate({ id, data }) {
     });
   });
 
-  const onInput = (evt) => {
+  function onInput (evt)  {
     dispatch(updateNodeLabel({ nodeId: id, label: evt.target.value }));
     if (evt.target.value.length > 30) {
       console.log(evt.target.value.length);
@@ -126,7 +156,7 @@ export function FlowBlockTemplate({ id, data }) {
       }
     }
   };
-  const onclickfun = () => {
+  const onclickHandle = () => {
     console.log("hello it works");
     console.log(id);
     setcount(count + 1);
@@ -136,8 +166,15 @@ export function FlowBlockTemplate({ id, data }) {
     console.log(position);
     const parentx = position.x;
     const parenty = position.y;
-    LogicNodes(presentnodeid, count, parentx, parenty);
-  }; //onclickfun ends
+    // LogicNodes(presentnodeid, count, parentx, parenty);
+    dispatch(
+      addChildNode({
+        parentid: presentnodeid,
+        position: { x: parentx + 150, y: parenty },
+      })
+    );
+    onLayout("LR");
+  }; //onclickHandle ends
   console.log(count);
   return (
     <>
@@ -148,7 +185,7 @@ export function FlowBlockTemplate({ id, data }) {
             id="userinputbox"
             className="border h-min p-1 overflow-hidden w-56 text-center nodrag max-h-28 shadow-lg focus:outline-none"
             value={data.label}
-            onChange={onInput}
+            onChange={(e) => onInput(e.target.value)}
             contentEditable
           />
         </div>
@@ -160,7 +197,7 @@ export function FlowBlockTemplate({ id, data }) {
         <Handle
           type="source"
           position={Position.Right}
-          onClick={onclickfun}
+          onClick={onclickHandle}
         ></Handle>
       </div>
     </>

@@ -1,3 +1,60 @@
+// import react from "react";
+
+// class Temp extends react.Component{
+
+
+//     constructor(props){
+//     super(props)
+// }
+
+
+
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 import { useDispatch, useSelector } from "react-redux";
 import React, { useCallback, useRef, useState } from "react";
@@ -174,14 +231,14 @@ function Flow() {
       nodes={nodes}
       edges={edges}
       nodeTypes={nodeTypes}
-      // onNodesChange={() => {
-      //   dispatch(applyNodeChanges({ changes: nodes }));
-      //   onNodesChange();
-      // }}
-      // onEdgesChange={() => {
-      //   dispatch(applyEdgeChanges({ changes: edges }));
-      //   onEdgesChange();
-      // }}
+      onNodesChange={() => {
+        dispatch(applyNodeChanges({ changes: nodes }));
+        onNodesChange();
+      }}
+      onEdgesChange={() => {
+        dispatch(applyEdgeChanges({ changes: edges }));
+        onEdgesChange();
+      }}
       onConnectStart={onConnectStart}
       onConnectEnd={onConnectEnd}
       nodeOrigin={nodeOrigin}

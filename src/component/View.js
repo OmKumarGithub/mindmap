@@ -24,6 +24,7 @@ function View() {
 
   return (
     <>
+    
       <div className="flex  space-x-1 overflow-hidden">
         <div className={`${display} w-1/2 m-1 shadow-2xl delay-50 `}>
           <Text></Text>
