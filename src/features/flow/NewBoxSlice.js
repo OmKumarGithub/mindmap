@@ -8,48 +8,67 @@ const edgeType = 'smoothstep';
 const initialState = {
   nodes: [
     {
-      id: "1",
+      id: '1',
       type: "mindmap",
       data: { value: "Input Node" },
-      position,
-      parentId :0,
+      position: { x: 0, y: 0 },
     },
     {
-      id: "2",
+      id: '2',
       type: "mindmap",
       data: { value: "Input Node" },
-      position,
-      parentId :0,
+      position: { x: 0, y: 100 },
     },
     {
-      id: "2a",
-      type: "mindmap",
+      id: '2a',
+       type: "mindmap",
       data: { value: "Input Node" },
-      position,
-      parentId :0,
+      position: { x: 0, y: 200 },
     },
     {
-      id: "2b",
+      id: '2b',
       type: "mindmap",
       data: { value: "Input Node" },
-      position,
-      parentId :0,
+      position: { x: 0, y: 300 },
     },
     {
-      id: "2c",
+      id: '2c',
       type: "mindmap",
       data: { value: "Input Node" },
-      position,
-      parentId :0,
+      position: { x: 0, y: 400 },
     },
-
- 
-  ],
+    {
+      id: '2d',
+      type: "mindmap",
+      data: { value: "Input Node" },
+      position: { x: 0, y: 500 },
+    },
+    {
+      id: '3',
+      type: "mindmap",
+      data: { value: "Input Node" },
+      position: { x: 200, y: 100 },
+    }],
   edges: [
-    { id: "e1-2", source: "1", target: "2" ,type: edgeType, animated: true},
-    { id: 'e22a', source: '2', target: '2a', type: edgeType, animated: true },
+    { id: 'e12', source: '1', target: '2', animated: true },
+    { id: 'e13', source: '1', target: '3', animated: true },
+    { id: 'e22a', source: '2', target: '2a', animated: true },
+    { id: 'e22b', source: '2', target: '2b', animated: true },
+    { id: 'e22c', source: '2', target: '2c', animated: true },
+    { id: 'e2c2d', source: '2c', target: '2d', animated: true },
   ],
 };
+
+
+
+
+
+
+
+
+
+
+
 
 const rfSlice = createSlice({
   name: "rf",
@@ -129,35 +148,6 @@ let edgeid = "e" + parentid +"-"+ nid+"";
   
 },
 
-
-
-
-
-    
-
-    // addChildNode: (state, action) => {
-    //   const { parentid, position } = action.payload;
-    //   const nodeId = nanoid();
-    //   const newNode = {
-    //     id: nodeId,
-    //     type: "mindmap",
-    //     data: { label: "" },
-    //     position,
-    //     dragHandle: ".dragHandle",
-    //     parentNode: `${parentid}`,
-    //   };
-
-    //   const newEdge = {
-    //     id: `${nanoid()}`,
-    //     source: `${parentid}`,
-    //     target: `${nodeId}`,
-    //   };
-    //   console.log(newEdge);
-    //   console.log(newNode);
-
-    //   state.nodes.push(newNode);
-    //   state.edges.push(newEdge);
-    // },
   },
 });
 
