@@ -1,35 +1,53 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { nanoid } from "nanoid/non-secure";
 
+
+const position = { x: 0, y: 0 };
+const edgeType = 'smoothstep';
+
 const initialState = {
   nodes: [
     {
       id: "1",
       type: "mindmap",
       data: { value: "Input Node" },
-      position: { x: 250, y: 25 },
-      // parentNode: null,
+      position,
+      parentId :0,
+    },
+    {
+      id: "2",
+      type: "mindmap",
+      data: { value: "Input Node" },
+      position,
+      parentId :0,
+    },
+    {
+      id: "2a",
+      type: "mindmap",
+      data: { value: "Input Node" },
+      position,
+      parentId :0,
+    },
+    {
+      id: "2b",
+      type: "mindmap",
+      data: { value: "Input Node" },
+      position,
+      parentId :0,
+    },
+    {
+      id: "2c",
+      type: "mindmap",
+      data: { value: "Input Node" },
+      position,
       parentId :0,
     },
 
-    // {
-    //   id: "2",
-    //   type: "mindmap",
-    //   // you can also pass a React component as a label
-    //   data: { value:"ouiy"},
-    //   position: { x: 100, y: 125 },
-    //   // parentNode: "1",
-    // },
-    // // {
-    // //   id: "3",
-    // //   type: "output",
-    // //   data: { label: "Output Node" },
-    // //   position: { x: 250, y: 250 },
-    // // },
+ 
   ],
   edges: [
-    { id: "e1-2", source: "1", target: "2" },
-    // { id: "e2-3", source: "2", target: "3", animated: true },
+    { id: "e1-2", source: "1", target: "2" ,type: edgeType, animated: true},
+    { id: 'e22a', source: '2', target: '2a', type: edgeType, animated: true },
   ],
 };
 
@@ -39,28 +57,13 @@ const rfSlice = createSlice({
   reducers: {
     applyNodeChanges: (state, action) => {
       const { changes } = action.payload;
-      state.nodes = state.nodes.map((node) => {
-        const change = changes.find((change) => change.id === node.id);
-        if (change) {
-          return { ...node, ...change };
-        } else {
-          return node;
-        }
-      });
+      state.nodes = [...changes]
     },
+
+
     applyEdgeChanges: (state, action) => {
       const { changes } = action.payload;
-      state.edges = state.edges.map((edge) => {
-        const change = changes.find((change) => change.id === edge.id);
-        if (change) {
-          console.log("gvhjv");
-          return { ...edge, ...change };
-        } else {
-          console.log("kkkk");
-
-          return edge;
-        }
-      });
+      state.nodes = [...changes]
     },
 
     updateNodeLabel: (state, action) => {
@@ -72,7 +75,36 @@ const rfSlice = createSlice({
       }
      }
     },
+
+    addNodeTargetPosition:(state,action)=>{
+      const { nodeId,bool} = action.payload;
+      for(let i =0;i<state.nodes.length;i++){
+        if(state.nodes[i].id==nodeId){
+        Object.defineProperty(state.nodes[i], "targetPosition", {value:bool})
+        }
+      }
+    },
+
+    addNodeSourcePosition:(state,action)=>{
+      const { nodeId,bool} = action.payload;
+      for(let i =0;i<state.nodes.length;i++){
+        if(state.nodes[i].id==nodeId){
+        Object.defineProperty(state.nodes[i], "sourcePosition", {value:bool})
+        }
+      }
+    },
  
+    setNodePosition:(state,action)=>{
+      const { nodeId,x,y} = action.payload;
+      for(let i =0;i<state.nodes.length;i++){
+        if(state.nodes[i].id==nodeId){
+          state.nodes[i].position={x:x,y:y}
+          break
+        }
+      }
+    },
+
+
 addChildNode:(state,action)=>{
   const{parentid}=action.payload;
   // for(let i;i<state.nodes.length;i++){
@@ -89,8 +121,8 @@ let nid=nanoid()
 let edgeid = "e" + parentid +"-"+ nid+"";
   return {
     ...state,
-    nodes: [...state.nodes,{id:"nid",type:"mindmap",data:{label:""},position:{ x: 350, y: 25 },parentid:"1"} ],
-    edges: [...state.edges, { id: edgeid, source: parentid, target: nid }],
+    nodes: [...state.nodes,{id:nid,type:"mindmap",data:{label:""},position,parentid:parentid} ],
+    edges: [...state.edges, { id: edgeid, source: parentid, target: nid ,type: edgeType, animated: true}],
   };
 
 
@@ -134,6 +166,9 @@ export const {
   applyEdgeChanges,
   updateNodeLabel,
   addChildNode,
+  setNodePosition,
+  addNodeSourcePosition,
+  addNodeTargetPosition
 } = rfSlice.actions;
 
 export default rfSlice.reducer;
