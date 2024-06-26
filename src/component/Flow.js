@@ -1,7 +1,6 @@
-
-import { useSelector } from "react-redux";
-import { stratify, tree } from 'd3-hierarchy';
-import React, { useCallback} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { stratify, tree } from "d3-hierarchy";
+import React, { useCallback, useEffect } from "react";
 import "reactflow/dist/style.css";
 import FlowBlockTemplate from "./FlowBlockTemplate";
 
@@ -14,6 +13,7 @@ import ReactFlow, {
   useEdgesState,
 } from "reactflow";
 
+
 const nodeTypes = {
   mindmap: FlowBlockTemplate,
 };
@@ -21,9 +21,10 @@ const nodeTypes = {
 export var NodeIdOfCurrentHandleClick = null;
 
 
+
+
+// **********************BOILERPLATE CODE FOR GRAPHS**************************************
 const g = tree();
-
-
 
 const getLayoutedElements = (nodes, edges, options) => {
   if (nodes.length === 0) return { nodes, edges };
@@ -44,21 +45,40 @@ const getLayoutedElements = (nodes, edges, options) => {
     edges,
   };
 };
+// ****************************************************************************************************
 
 
 function Flow() {
+  const initialNodes = useSelector((state) => state.rf.nodes);
+  const initialEdges = useSelector((state) => state.rf.edges);
+
+
+
+
+
+
   
-  const initialNodes = (useSelector(state => state.rf.nodes));
-  const initialEdges =(useSelector(state => state.rf.edges));
   const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
+
+  useEffect(()=>{
+    setNodes(initialNodes)
+    setEdges(initialEdges)
+   },
+   [initialNodes,initialEdges])
+
+
+
+
+
   const onLayout = useCallback(
     (direction) => {
-      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges, {
-        direction,
-      });
+      const { nodes: layoutedNodes, edges: layoutedEdges } =
+        getLayoutedElements(nodes, edges, {
+          direction,
+        });
 
       setNodes([...layoutedNodes]);
       setEdges([...layoutedEdges]);
@@ -70,12 +90,10 @@ function Flow() {
     [nodes, edges]
   );
 
-
-
-
-
   return (
+    // {{console.log("hello")}}
     <ReactFlow
+    
       nodes={nodes}
       edges={edges}
       nodeTypes={nodeTypes}
@@ -83,8 +101,12 @@ function Flow() {
       onEdgesChange={onEdgesChange}
       fitView
       className="overflow-hidden "
-    > <Panel position="top-right">
-        <button className="border border-black" onClick={onLayout}>layout</button>
+    >
+      {" "}
+      <Panel position="top-right">
+        <button className="border border-black" onClick={onLayout}>
+          layout
+        </button>
       </Panel>
       <Controls showInteractive={false} />
       <Background></Background>
