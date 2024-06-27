@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateNodeLabel } from "../features/flow/NewBoxSlice";
 import { Handle, Position, useReactFlow } from "reactflow";
@@ -57,9 +57,6 @@ export function FlowBlockTemplate({ id, data }) {
     console.log(edges);
   };
 
-
-  
-
   const onLayout = useCallback(
     (direction) => {
       const layouted = getLayoutedElements(nodes, edges, { direction });
@@ -87,6 +84,14 @@ export function FlowBlockTemplate({ id, data }) {
       }
     }
   };
+  //added window listner
+  useEffect(() => {
+    window.addEventListener("resize", instance.fitView);
+
+    return () => {
+      window.removeEventListener("resize", instance.fitView);
+    };
+  }, []);
 
   return (
     <>
