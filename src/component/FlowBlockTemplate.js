@@ -1,47 +1,96 @@
-import { useState } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ChangeisNodesEdgesStateChanged, addChildNode, updateNodeLabel } from "../features/flow/NewBoxSlice";
+import { updateNodeLabel } from "../features/flow/NewBoxSlice";
 import { Handle, Position, useReactFlow } from "reactflow";
+import { nanoid } from "nanoid/non-secure";
+import Dagre from "@dagrejs/dagre";
+
+// *************************BOLIER PLATE CODE***************************
+const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
+const getLayoutedElements = (nodes, edges, options) => {
+  g.setGraph({ rankdir: options.direction });
+
+  edges.forEach((edge) => g.setEdge(edge.source, edge.target));
+  nodes.forEach((node) => g.setNode(node.id, node));
+
+  Dagre.layout(g);
+  return {
+    nodes: nodes.map((node) => {
+      const { x, y } = g.node(node.id);
+
+      return { ...node, position: { x, y } };
+    }),
+    edges,
+  };
+};
+// ***************************************************************************
 
 //ye id jo hum parameter mein de rhe hein wo reactflow khud detect kar rha hai
 //......reactflow ke andar ek parameter pass kr rkha hai nodetypes naam ka aur wo ek object leta hai
 //jismein flowblocktemplate ki value hai
+
 export function FlowBlockTemplate({ id, data }) {
+  const omnodes = useSelector((state) => state.rf.nodes);
+  const omedges = useSelector((state) => state.rf.edges);
+  const fun = useSelector((state) => state.rf.fun);
+
   const dispatch = useDispatch();
-  const nodes = useSelector((state) => state.rf.nodes);
-  const edges = useSelector((state) => state.rf.edges);
-  const fun = useSelector((state)=>state.rf.fun)
-  const isNodesEdgesStateChanged = useSelector((state) => state.rf.isNodesEdgesStateChanged);
+
+  const instance = useReactFlow();
+  const nodes = instance.getNodes();
+  const edges = instance.getEdges();
+  const node = instance.getNode(`${id}`);
 
   var [inputDataValue, SetInputDataValue] = useState(data.value);
 
   const onclickHandle = () => {
-    dispatch(addChildNode({ parentid: id }));
+    let nid = "" + nanoid();
+    let edgeid = "e" + id + "" + nid + "";
+    instance.addNodes({
+      id: nid,
+      type: "mindmap",
+      data: { label: "ooooooooo" },
+      position: { x: node.position.x + 250, y: node.position.y },
+    });
+    instance.addEdges({ id: edgeid, source: id, target: nid, animated: true });
     console.log(nodes);
     console.log(edges);
-    
-    dispatch(ChangeisNodesEdgesStateChanged({bool: Boolean(!isNodesEdgesStateChanged)}))
-    if (typeof fun === 'function') {
-      fun(); // Call fun if it's a function
-    }
-    console.log(isNodesEdgesStateChanged)
   };
+
+
+  
+
+  const onLayout = useCallback(
+    (direction) => {
+      const layouted = getLayoutedElements(nodes, edges, { direction });
+
+      instance.setNodes([...layouted.nodes]);
+      instance.setEdges([...layouted.edges]);
+
+      window.requestAnimationFrame(() => {
+        instance.fitView();
+      });
+    },
+    [nodes, edges]
+  );
+
+  useLayoutEffect(() => {
+    onLayout("LR");
+  });
 
   const onChange = (evt) => {
     SetInputDataValue(evt.target.value);
     dispatch(updateNodeLabel({ nodeId: id, label: inputDataValue }));
-    for (let i = 0; i < nodes.length; i++) {
-      if (nodes[i].id == id) {
-        console.log(nodes[i].data);
+    for (let i = 0; i < omnodes.length; i++) {
+      if (omnodes[i].id == id) {
+        console.log(omnodes[i].data);
       }
     }
-
-
   };
 
   return (
     <>
-      <div>
+      <div className=" border p-1 rounded-lg">
         <div>
           <input
             id="text"
@@ -51,15 +100,16 @@ export function FlowBlockTemplate({ id, data }) {
             className="nodrag text-center"
           />
         </div>
-
+        {id !== 1 ? (
+          <Handle type="target" className="" position={Position.Left}></Handle>
+        ) : (
+          <></>
+        )}
         <Handle
           type="source"
-          position={Position.Bottom}
+          position={Position.Right}
           onClick={onclickHandle}
-          id="a"
-        />
-
-        <Handle type="target" position={Position.Top} />
+        ></Handle>
       </div>
     </>
   );
