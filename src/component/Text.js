@@ -1,11 +1,19 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { useReactFlow } from 'reactflow';
 
 
 
 function Text() {
-  
+  const instance = useReactFlow();
 
-  
+
+  useEffect(() => {
+    window.addEventListener("resize", instance.fitView);
+
+    return () => {
+      window.removeEventListener("resize", instance.fitView);
+    };
+  })
 
   return (
     <>

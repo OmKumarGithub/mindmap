@@ -7,14 +7,81 @@ const edgeType = "smoothstep";
 const initialState = {
   nodes: [
     {
-      id: "1",
-      type: "mindmap",
-      data: { value: "" },
-      position: { x: 0, y: 0 },
-      parentNode: null,
+        "id": "3",
+        "type": "mindmap",
+        "data": {
+            "label": "ooooooooo",
+        },
+        "position": {
+            "x": 577.5,
+            "y": 16.5
+        },
+        "positionAbsolute": {
+            "x": 577.5,
+            "y": 16.5
+        },
+        "x": 577.5,
+        "y": 16.5,
+        "rank": 4,
+        "width": 156,
+        "height": 33
     },
+    {
+        "id": "2",
+        "type": "mindmap",
+        "data": {
+            "label": "ooooooooo"
+        },
+        "position": {
+            "x": 336.5,
+            "y": 16.5
+        },
+        "positionAbsolute": {
+            "x": 336.5,
+            "y": 16.5
+        },
+        "x": 336.5,
+        "y": 16.5,
+        "rank": 2,
+        "width": 191,
+        "height": 33
+    },
+    {
+        "id": "1",
+        "type": "mindmap",
+        "data": {
+            "value": ""
+        },
+        "position": {
+            "x": 95.5,
+            "y": 16.5
+        },
+        "parentNode": null,
+        "positionAbsolute": {
+            "x": 95.5,
+            "y": 16.5
+        },
+        "x": 95.5,
+        "y": 16.5,
+        "rank": 0,
+        "width": 191,
+        "height": 33
+    }
   ],
-  edges: [],
+  edges:[
+    {
+        "id": "e23",
+        "source": "2",
+        "target": "3",
+        "animated": true
+    },
+    {
+        "id": "e12",
+        "source": "1",
+        "target": "2",
+        "animated": true
+    }
+  ],
   isNodesEdgesStateChanged: false,
   fun: null,
 };

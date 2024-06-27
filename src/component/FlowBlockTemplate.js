@@ -57,6 +57,34 @@ export function FlowBlockTemplate({ id, data }) {
     console.log(edges);
   };
 
+
+
+  const onclickdelete = () => {
+    // let tempnodes=[]
+    // let tempedges=[]
+    // for(let i=0; i<omnodes.length;i++){
+    //   if(omnodes[i].id==id){
+    //     for(let j =0;j<tempedges.length;j++){
+    //       if(omedges[j].target==id){
+    //         continue
+    //       }
+    //       tempedges.push(omedges[j])
+    //     }
+    //     continue
+    //   }
+    //   tempnodes.push(omnodes[i])
+    // }
+
+    // instance.deleteElements({nodes:,edges:})
+   
+    console.log(omnodes)
+    console.log(omedges)
+    console.log("vbjf hj ")
+  };
+
+
+
+
   const onLayout = useCallback(
     (direction) => {
       const layouted = getLayoutedElements(nodes, edges, { direction });
@@ -93,6 +121,15 @@ export function FlowBlockTemplate({ id, data }) {
     };
   }, []);
 
+
+
+
+  // nothing is working other than top and left
+  const handleStyle ={
+    left:190,
+    top: -7,
+  }
+
   return (
     <>
       <div className=" border p-1 rounded-lg">
@@ -115,6 +152,13 @@ export function FlowBlockTemplate({ id, data }) {
           position={Position.Right}
           onClick={onclickHandle}
         ></Handle>
+       
+         <Handle
+        onClick={onclickdelete}
+        position={Position.Bottom}
+        id="a"
+        style={handleStyle}
+      />
       </div>
     </>
   );

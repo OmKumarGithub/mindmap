@@ -36,6 +36,7 @@ function Flow() {
       <Panel position="top-right"></Panel>
       <Controls showInteractive={true} />
       <Background></Background>
+      
       <Panel position="top-left" className="header">
         React Flow Mind Map
       </Panel>
