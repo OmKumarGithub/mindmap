@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {  addChildNode, updateNodeLabel } from "../features/flow/NewBoxSlice";
+import { ChangeisNodesEdgesStateChanged, addChildNode, updateNodeLabel } from "../features/flow/NewBoxSlice";
 import { Handle, Position, useReactFlow } from "reactflow";
 
 //ye id jo hum parameter mein de rhe hein wo reactflow khud detect kar rha hai
@@ -10,6 +10,8 @@ export function FlowBlockTemplate({ id, data }) {
   const dispatch = useDispatch();
   const nodes = useSelector((state) => state.rf.nodes);
   const edges = useSelector((state) => state.rf.edges);
+  const fun = useSelector((state)=>state.rf.fun)
+  const isNodesEdgesStateChanged = useSelector((state) => state.rf.isNodesEdgesStateChanged);
 
   var [inputDataValue, SetInputDataValue] = useState(data.value);
 
@@ -17,6 +19,12 @@ export function FlowBlockTemplate({ id, data }) {
     dispatch(addChildNode({ parentid: id }));
     console.log(nodes);
     console.log(edges);
+    
+    dispatch(ChangeisNodesEdgesStateChanged({bool: Boolean(!isNodesEdgesStateChanged)}))
+    if (typeof fun === 'function') {
+      fun(); // Call fun if it's a function
+    }
+    console.log(isNodesEdgesStateChanged)
   };
 
   const onChange = (evt) => {
@@ -27,6 +35,8 @@ export function FlowBlockTemplate({ id, data }) {
         console.log(nodes[i].data);
       }
     }
+
+
   };
 
   return (
@@ -38,7 +48,7 @@ export function FlowBlockTemplate({ id, data }) {
             value={inputDataValue}
             name="text"
             onChange={onChange}
-            className="nodrag"
+            className="nodrag text-center"
           />
         </div>
 

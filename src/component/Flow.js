@@ -12,6 +12,7 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
 } from "reactflow";
+import { setfun } from "../features/flow/NewBoxSlice";
 
 
 const nodeTypes = {
@@ -51,10 +52,18 @@ const getLayoutedElements = (nodes, edges, options) => {
 function Flow() {
   const initialNodes = useSelector((state) => state.rf.nodes);
   const initialEdges = useSelector((state) => state.rf.edges);
+  const isNodesEdgesStateChanged = useSelector((state) => state.rf.isNodesEdgesStateChanged);
+const dispatch = useDispatch()
+
+  // useCallback(()=>{
+  //   onLayout()
+  //   console.log("djgnjd")
+  // getLayoutedElements(initialEdges,initialEdges)
+  // },[isNodesEdgesStateChanged,initialNodes,initialEdges])
 
 
 
-
+  // getLayoutedElements(initialEdges,initialEdges,direction)
 
 
   
@@ -70,13 +79,14 @@ function Flow() {
    [initialNodes,initialEdges])
 
 
-
+useCallback(()=>{dispatch(setfun())})
 
 
   const onLayout = useCallback(
     (direction) => {
+      //
       const { nodes: layoutedNodes, edges: layoutedEdges } =
-        getLayoutedElements(nodes, edges, {
+        getLayoutedElements(initialNodes, initialEdges, {
           direction,
         });
 

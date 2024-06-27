@@ -57,6 +57,8 @@ const initialState = {
     { id: "e22c", source: "2", target: "2c", animated: true },
     { id: "e2c2d", source: "2c", target: "2d", animated: true },
   ],
+  isNodesEdgesStateChanged:false,
+  fun:null,
 };
 
 const rfSlice = createSlice({
@@ -124,6 +126,7 @@ const rfSlice = createSlice({
         ...state,
         nodes: [...state.nodes,{ id: nid, type: "mindmap",data: { label: "ooooooooo" },position},],
         edges: [...state.edges,{ id: edgeid, source: parentid, target: nid, animated: true},],
+        isNodesEdgesStateChanged:true,
       };
 
         // you cannnot use this approach bcoz reducer function should compulsory return something
@@ -133,6 +136,15 @@ const rfSlice = createSlice({
 
     },
 
+    ChangeisNodesEdgesStateChanged:(state,action)=>{
+      const { bool } = action.payload;
+        state.isNodesEdgesStateChanged=Boolean(bool)
+    },
+
+    setfun:(state,action)=>{
+      const{pfun} =action.payload;
+      state.fun=pfun
+    },
   },
 });
 
@@ -141,6 +153,8 @@ export const {
   applyEdgeChanges,
   updateNodeLabel,
   addChildNode,
+  setfun,
+  ChangeisNodesEdgesStateChanged,
   setNodePosition,
   addNodeSourcePosition,
   addNodeTargetPosition,
