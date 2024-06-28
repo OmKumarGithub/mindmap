@@ -52,8 +52,6 @@ export function FlowBlockTemplate({ id, data }) {
   const onclickHandle = () => {
     let nid = "" + nanoid();
     let edgeid = "e" + id + "" + nid + "";
-
-    // dispatch(addChildNode({parentid:id}))
     instance.addNodes({
       id: nid,
       type: "mindmap",
@@ -139,40 +137,21 @@ export function FlowBlockTemplate({ id, data }) {
         !deletedNodesId.includes(okedge.target)
     );
 
-    // instance.setNodes([...newNodes]);
-    // instance.setEdges([...newEdges]);
 
-    console.log("before from nodes");
-    console.log(nodes);
-    console.log(typeof nodes);
-    console.log("*********************************");
+    // console.log("before from nodes");
+    // console.log(nodes);
+    // console.log(typeof nodes);
+    // console.log("*********************************");
 
-    console.log("before from reduxnodes");
-    console.log(omnodes);
-    console.log(typeof omnodes);
-    console.log("*********************************");
+    // console.log("before from reduxnodes");
+    // console.log(omnodes);
+    // console.log(typeof omnodes);
+    // console.log("*********************************");
 
-    console.log("before from Newnodes");
-    console.log(newNodes);
-    console.log(typeof newNodes);
-    console.log("*********************************");
-
-    console.log(" before from deletenodes id");
-    console.log(deletedNodesId);
-    console.log(typeof deletedNodesId);
-    console.log("*********************************");
+    
     instance.setNodes([...newNodes]);
     instance.setEdges([...newEdges]);
 
-    console.log("after from nodes");
-    console.log(nodes);
-    console.log(typeof nodes);
-    console.log("*********************************");
-
-    console.log("after from reduxnodes");
-    console.log(omnodes);
-    console.log(typeof omnodes);
-    console.log("*********************************");
     onLayout("LR");
   };
 
