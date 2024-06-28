@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateNodeLabel } from "../features/flow/NewBoxSlice";
+import {
+  addChildNode,
+  applyEdgeChanges,
+  applyNodeChanges,
+  updateNodeLabel,
+} from "../features/flow/NewBoxSlice";
 import { Handle, Position, useReactFlow } from "reactflow";
 import { nanoid } from "nanoid/non-secure";
 import Dagre from "@dagrejs/dagre";
@@ -37,6 +42,7 @@ export function FlowBlockTemplate({ id, data }) {
   const dispatch = useDispatch();
 
   const instance = useReactFlow();
+  const deleteElements = instance.deleteElements;
   const nodes = instance.getNodes();
   const edges = instance.getEdges();
   const node = instance.getNode(`${id}`);
@@ -46,51 +52,73 @@ export function FlowBlockTemplate({ id, data }) {
   const onclickHandle = () => {
     let nid = "" + nanoid();
     let edgeid = "e" + id + "" + nid + "";
+
+    // dispatch(addChildNode({parentid:id}))
     instance.addNodes({
       id: nid,
       type: "mindmap",
       data: { label: "ooooooooo" },
       position: { x: node.position.x + 250, y: node.position.y },
     });
+
     instance.addEdges({ id: edgeid, source: id, target: nid, animated: true });
+    dispatch(addChildNode({ parentid: id }));
     console.log(nodes);
     console.log(edges);
   };
 
+  function findingalldeletenodesId(tempid, pdeletedNodesId, omedges) {
+    let count = 0;
+    let deletedSiblingsId = [];
 
+    for (let i = 0; i < omedges.length; i++) {
+      if (omedges[i].source === tempid) {
+        deletedSiblingsId.push(omedges[i].target);
+        // Found at least one child
+        count = 1;
+      }
+    }
 
-  const onclickdelete = () => {
-    // let tempnodes=[]
-    // let tempedges=[]
-    // for(let i=0; i<omnodes.length;i++){
-    //   if(omnodes[i].id==id){
-    //     for(let j =0;j<tempedges.length;j++){
-    //       if(omedges[j].target==id){
-    //         continue
-    //       }
-    //       tempedges.push(omedges[j])
-    //     }
-    //     continue
-    //   }
-    //   tempnodes.push(omnodes[i])
-    // }
+    // ye leaf node hai and base statement
+    if (count === 0) {
+      return [...pdeletedNodesId, tempid];
+    }
 
-    // instance.deleteElements({nodes:,edges:})
-   
-    console.log(omnodes)
-    console.log(omedges)
-    console.log("vbjf hj ")
-  };
+    // ye sibling hai
+    for (let j = 0; j < deletedSiblingsId.length; j++) {
+      pdeletedNodesId = findingalldeletenodesId(
+        deletedSiblingsId[j],
+        pdeletedNodesId,
+        omedges
+      );
+    }
 
+    return [...pdeletedNodesId, tempid];
+  }
 
-
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const onLayout = useCallback(
     (direction) => {
+      if (isUpdating) return;
+
+      setIsUpdating(true);
+
       const layouted = getLayoutedElements(nodes, edges, { direction });
 
       instance.setNodes([...layouted.nodes]);
       instance.setEdges([...layouted.edges]);
+
+      //  cyclic dependency aa rhi thi isliye kra
+      setTimeout(() => {
+        dispatch(
+          applyNodeChanges({ changes: JSON.stringify([...layouted.nodes]) })
+        );
+        dispatch(
+          applyEdgeChanges({ changes: JSON.stringify([...layouted.edges]) })
+        );
+        setIsUpdating(false);
+      }, 0);
 
       window.requestAnimationFrame(() => {
         instance.fitView();
@@ -98,6 +126,55 @@ export function FlowBlockTemplate({ id, data }) {
     },
     [nodes, edges]
   );
+
+  const onclickdelete = () => {
+    let deletedNodesId = findingalldeletenodesId(id, [], omedges);
+
+    let newNodes = omnodes.filter(
+      (oknode) => !deletedNodesId.includes(oknode.id)
+    );
+    let newEdges = omedges.filter(
+      (okedge) =>
+        !deletedNodesId.includes(okedge.source) &&
+        !deletedNodesId.includes(okedge.target)
+    );
+
+    // instance.setNodes([...newNodes]);
+    // instance.setEdges([...newEdges]);
+
+    console.log("before from nodes");
+    console.log(nodes);
+    console.log(typeof nodes);
+    console.log("*********************************");
+
+    console.log("before from reduxnodes");
+    console.log(omnodes);
+    console.log(typeof omnodes);
+    console.log("*********************************");
+
+    console.log("before from Newnodes");
+    console.log(newNodes);
+    console.log(typeof newNodes);
+    console.log("*********************************");
+
+    console.log(" before from deletenodes id");
+    console.log(deletedNodesId);
+    console.log(typeof deletedNodesId);
+    console.log("*********************************");
+    instance.setNodes([...newNodes]);
+    instance.setEdges([...newEdges]);
+
+    console.log("after from nodes");
+    console.log(nodes);
+    console.log(typeof nodes);
+    console.log("*********************************");
+
+    console.log("after from reduxnodes");
+    console.log(omnodes);
+    console.log(typeof omnodes);
+    console.log("*********************************");
+    onLayout("LR");
+  };
 
   useLayoutEffect(() => {
     onLayout("LR");
@@ -112,6 +189,7 @@ export function FlowBlockTemplate({ id, data }) {
       }
     }
   };
+
   //added window listner
   useEffect(() => {
     window.addEventListener("resize", instance.fitView);
@@ -121,14 +199,11 @@ export function FlowBlockTemplate({ id, data }) {
     };
   }, []);
 
-
-
-
   // nothing is working other than top and left
-  const handleStyle ={
-    left:190,
+  const handleStyle = {
+    left: 190,
     top: -7,
-  }
+  };
 
   return (
     <>
@@ -152,13 +227,15 @@ export function FlowBlockTemplate({ id, data }) {
           position={Position.Right}
           onClick={onclickHandle}
         ></Handle>
-       
-         <Handle
-        onClick={onclickdelete}
-        position={Position.Bottom}
-        id="a"
-        style={handleStyle}
-      />
+
+        <Handle
+          onClick={() => {
+            onclickdelete();
+          }}
+          position={Position.Bottom}
+          id="a"
+          style={handleStyle}
+        />
       </div>
     </>
   );

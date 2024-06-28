@@ -92,13 +92,14 @@ const rfSlice = createSlice({
   reducers: {
     applyNodeChanges: (state, action) => {
       const { changes } = action.payload;
-      state.nodes = [...changes];
+      state.nodes = JSON.parse(changes);
     },
-
+    
     applyEdgeChanges: (state, action) => {
       const { changes } = action.payload;
-      state.nodes = [...changes];
+      state.edges = JSON.parse(changes);
     },
+    
 
     updateNodeLabel: (state, action) => {
       const { nodeId, label } = action.payload;
