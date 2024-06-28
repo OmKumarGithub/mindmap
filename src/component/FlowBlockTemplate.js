@@ -48,6 +48,7 @@ export function FlowBlockTemplate({ id, data }) {
   const edges = instance.getEdges();
   const node = instance.getNode(`${id}`);
   var [inputDataValue, SetInputDataValue] = useState(data.value);
+  const [rows ,setrows] =useState(1)
 
   const onclickHandle = () => {
     let nid = "" + nanoid();
@@ -168,6 +169,11 @@ export function FlowBlockTemplate({ id, data }) {
       if (omnodes[i].id == id) {
         console.log(omnodes[i].data);
       }
+
+     let tempRows = Math.ceil((evt.target.value.length /15)-(evt.target.value.length)/80)
+      setrows(tempRows);
+
+
     }
   };
 
@@ -208,7 +214,8 @@ background:"white"
             value={inputDataValue}
             onChange={onChange}
             className="resize-none border rounded-md p-2"
-            style={{ height: 'auto',overflow:'hidden', minHeight: '80px' }}
+            style={{ height: 'auto',overflow:'hidden', minHeight: '80px'  }}
+            rows= {rows}
             placeholder="Enter text..."
         />
         {/* <div>
