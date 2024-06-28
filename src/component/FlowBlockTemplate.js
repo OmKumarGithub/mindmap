@@ -6,7 +6,7 @@ import {
   applyNodeChanges,
   updateNodeLabel,
 } from "../features/flow/NewBoxSlice";
-import { Handle, Position, useReactFlow } from "reactflow";
+import { Background, Handle, Position, useReactFlow } from "reactflow";
 import { nanoid } from "nanoid/non-secure";
 import Dagre from "@dagrejs/dagre";
 import { Tooltip } from "flowbite-react";
@@ -47,7 +47,6 @@ export function FlowBlockTemplate({ id, data }) {
   const nodes = instance.getNodes();
   const edges = instance.getEdges();
   const node = instance.getNode(`${id}`);
-
   var [inputDataValue, SetInputDataValue] = useState(data.value);
 
   const onclickHandle = () => {
@@ -188,19 +187,31 @@ export function FlowBlockTemplate({ id, data }) {
 
   
   const handleStyle = {
-    left: 190,
-    top: -7,
-    background:'#FF0000',
-    scale:'2',
-    cursor: 'pointer',
-    
+    left:160,
+    top: -5.5,
+
+background:"white"
 
   };
 
   return (
     <>
-      <div className=" border p-1 rounded-lg">
-        <div>
+      <div className=" border p-1 shadow-md rounded-lg bg-white">
+      {/* <div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400"> */}
+
+
+
+
+
+      <textarea
+      
+            value={inputDataValue}
+            onChange={onChange}
+            className="resize-none border rounded-md p-2"
+            style={{ height: 'auto',overflow:'hidden', minHeight: '80px' }}
+            placeholder="Enter text..."
+        />
+        {/* <div>
           <input
             id="text"
             value={inputDataValue}
@@ -208,9 +219,10 @@ export function FlowBlockTemplate({ id, data }) {
             onChange={onChange}
             className="nodrag text-center"
           />
-        </div>
-        {id !== 1 ? (
+        </div> */}
+        {id !== "1" ? (<>
           <Handle type="target" className="" position={Position.Left}></Handle>
+</>
         ) : (
           <></>
         )}
@@ -219,7 +231,9 @@ export function FlowBlockTemplate({ id, data }) {
           type="source"
           position={Position.Right}
           onClick={onclickHandle}
-        ></Handle>
+        >
+          
+        </Handle>
 
         <Handle
           onClick={() => {
@@ -228,7 +242,19 @@ export function FlowBlockTemplate({ id, data }) {
           position={Position.Bottom}
           id="a"
           style={handleStyle}
-        />
+        >
+<svg width="20px" height="20px" viewBox="0 0 32 32" version="1.1"  className=" cursor-pointer   hover:animate-pulse" >
+    
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" >
+        <g id="Icon-Set-Filled"  transform="translate(-570.000000, -1089.000000)" fill="#000000">
+            <path d="M591.657,1109.24 C592.048,1109.63 592.048,1110.27 591.657,1110.66 C591.267,1111.05 590.633,1111.05 590.242,1110.66 L586.006,1106.42 L581.74,1110.69 C581.346,1111.08 580.708,1111.08 580.314,1110.69 C579.921,1110.29 579.921,1109.65 580.314,1109.26 L584.58,1104.99 L580.344,1100.76 C579.953,1100.37 579.953,1099.73 580.344,1099.34 C580.733,1098.95 581.367,1098.95 581.758,1099.34 L585.994,1103.58 L590.292,1099.28 C590.686,1098.89 591.323,1098.89 591.717,1099.28 C592.11,1099.68 592.11,1100.31 591.717,1100.71 L587.42,1105.01 L591.657,1109.24 L591.657,1109.24 Z M586,1089 C577.163,1089 570,1096.16 570,1105 C570,1113.84 577.163,1121 586,1121 C594.837,1121 602,1113.84 602,1105 C602,1096.16 594.837,1089 586,1089 L586,1089 Z" id="cross-circle" >
+
+</path>
+        </g>
+    </g>
+</svg>
+
+        </Handle>
       </div>
     </>
   );
