@@ -10,10 +10,14 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   useReactFlow,
+  MiniMap,
+  BackgroundVariant,
+  ControlButton,
   // applyEdgeChanges
   // ******************************************* I *** spent 6 hrs just bcoz i made up a same name of reducer which was already there in reactflow library,
 } from "reactflow";
 import { applyNodeChanges, applyEdgeChanges } from "../features/flow/NewBoxSlice";
+import { MagicWandIcon } from "@radix-ui/react-icons";
 
 
 const nodeTypes = {
@@ -43,20 +47,29 @@ function Flow() {
       nodeTypes={nodeTypes}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
-      fitView
+      fitView 
       className="overflow-hidden "
     >
       {" "}
       <Panel position="top-right"></Panel>
-      <Controls showInteractive={true} />
-      <Background></Background>
+      <Controls showInteractive={true} >
+        <ControlButton  onClick={() => alert('future functionaly button')} >
+          <MagicWandIcon></MagicWandIcon>
+          
+        </ControlButton>
+      </Controls>
       
+    
+      <Background variant={BackgroundVariant.Dots}  ></Background>
+      <MiniMap nodeStrokeWidth={3} pannable={true} />
       <Panel position="top-right">
         <button onClick={om}>om</button>
         {/* <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
       </Panel>
     </ReactFlow>
   );
+
+
 }
 
 export default Flow;

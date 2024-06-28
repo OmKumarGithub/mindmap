@@ -5,6 +5,7 @@ import { useReactFlow } from 'reactflow';
 
 function Text() {
   const instance = useReactFlow();
+  const [text,settext]=useState()
 
 
   useEffect(() => {
@@ -15,12 +16,29 @@ function Text() {
     };
   })
 
+  function createSibling(){
+
+  }
+
+
+useEffect(()=>{
+
+})
+
+
+
+  function textToGraph(){
+    createSibling()
+  }
+
   return (
     <>
-        <div contentEditable='false' >
-        WRITE ANY THINGbnvbn
+        
+        <button onClick={textToGraph} className='border border-black m-8'>
+          hidkcnjd
+        </button>
      
-       </div> 
+      
     </>
   )
 }

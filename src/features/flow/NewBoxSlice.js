@@ -175,6 +175,15 @@ const rfSlice = createSlice({
       const { pfun } = action.payload;
       state.fun = pfun;
     },
+
+  
+
+
+
+
+
+
+
   },
 });
 

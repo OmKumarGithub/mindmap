@@ -9,6 +9,7 @@ import {
 import { Handle, Position, useReactFlow } from "reactflow";
 import { nanoid } from "nanoid/non-secure";
 import Dagre from "@dagrejs/dagre";
+import { Tooltip } from "flowbite-react";
 
 // *************************BOLIER PLATE CODE***************************
 const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
@@ -64,6 +65,8 @@ export function FlowBlockTemplate({ id, data }) {
     console.log(nodes);
     console.log(edges);
   };
+
+
 
   function findingalldeletenodesId(tempid, pdeletedNodesId, omedges) {
     let count = 0;
@@ -178,10 +181,20 @@ export function FlowBlockTemplate({ id, data }) {
     };
   }, []);
 
-  // nothing is working other than top and left
+  // nothing is working other than top and left\
+
+
+
+
+  
   const handleStyle = {
     left: 190,
     top: -7,
+    background:'#FF0000',
+    scale:'2',
+    cursor: 'pointer',
+    
+
   };
 
   return (
@@ -201,6 +214,7 @@ export function FlowBlockTemplate({ id, data }) {
         ) : (
           <></>
         )}
+        
         <Handle
           type="source"
           position={Position.Right}
