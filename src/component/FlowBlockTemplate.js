@@ -6,173 +6,106 @@ import {
   applyNodeChanges,
   updateNodeLabel,
 } from "../features/flow/NewBoxSlice";
-import { Background, Handle, Position, useReactFlow } from "reactflow";
+import { Handle, Position, useReactFlow } from "reactflow";
 import { nanoid } from "nanoid/non-secure";
 import Dagre from "@dagrejs/dagre";
-import { Tooltip } from "flowbite-react";
+import CrossSvg from "./CrossSvg";
+import Addsvg from "./Addsvg";
+import ImageaddSvg from "./ImageaddSvg";
 
 // *************************BOLIER PLATE CODE***************************
-const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-const getLayoutedElements = (nodes, edges, options) => {
-  g.setGraph({ rankdir: options.direction });
+const dagreGraph = new Dagre.graphlib.Graph();
+dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-  edges.forEach((edge) => g.setEdge(edge.source, edge.target));
-  nodes.forEach((node) => g.setNode(node.id, node));
+const nodeWidth = 172;
+const nodeHeight = 136;
 
-  Dagre.layout(g);
-  return {
-    nodes: nodes.map((node) => {
-      const { x, y } = g.node(node.id);
+const getLayoutedElements = (nodes, edges, direction = "TB") => {
+  const isHorizontal = direction === "LR";
+  dagreGraph.setGraph({ rankdir: direction });
 
-      return { ...node, position: { x, y } };
-    }),
-    edges,
-  };
+  nodes.forEach((node) => {
+    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+  });
+
+  edges.forEach((edge) => {
+    dagreGraph.setEdge(edge.source, edge.target);
+  });
+
+  Dagre.layout(dagreGraph);
+
+  nodes.forEach((node) => {
+    const nodeWithPosition = dagreGraph.node(node.id);
+    node.targetPosition = isHorizontal ? "left" : "top";
+    node.sourcePosition = isHorizontal ? "right" : "bottom";
+
+    // We are shifting the dagre node position (anchor=center center) to the top left
+    // so it matches the React Flow node anchor point (top left).
+    node.position = {
+      x: nodeWithPosition.x - nodeWidth / 2,
+      y: nodeWithPosition.y - nodeHeight / 2,
+    };
+
+    return node;
+  });
+
+  return { nodes, edges };
 };
+
+// const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+//   initialNodes,
+//   initialEdges
+// );
 // ***************************************************************************
+
+//*************************************************** */
+function findingalldeletenodesId(tempid, pdeletedNodesId, funParEdges) {
+  let count = 0;
+  let deletedSiblingsId = [];
+
+  for (let i = 0; i < funParEdges.length; i++) {
+    if (funParEdges[i].source === tempid) {
+      deletedSiblingsId.push(funParEdges[i].target);
+      count = 1;
+    }
+  }
+
+  // ye leaf node hai and base statement
+  if (count === 0) {
+    return [...pdeletedNodesId, tempid];
+  }
+
+  // ye sibling hai
+  for (let j = 0; j < deletedSiblingsId.length; j++) {
+    pdeletedNodesId = findingalldeletenodesId(
+      deletedSiblingsId[j],
+      pdeletedNodesId,
+      funParEdges
+    );
+  }
+
+  return [...pdeletedNodesId, tempid];
+}
+// *********************************************************
 
 //ye id jo hum parameter mein de rhe hein wo reactflow khud detect kar rha hai
 //......reactflow ke andar ek parameter pass kr rkha hai nodetypes naam ka aur wo ek object leta hai
 //jismein flowblocktemplate ki value hai
 
 export function FlowBlockTemplate({ id, data }) {
-  const omnodes = useSelector((state) => state.rf.nodes);
-  const omedges = useSelector((state) => state.rf.edges);
-  const fun = useSelector((state) => state.rf.fun);
+  const [inputDataValue, SetInputDataValue] = useState(data.label);
 
   const dispatch = useDispatch();
 
   const instance = useReactFlow();
-  const deleteElements = instance.deleteElements;
   const nodes = instance.getNodes();
   const edges = instance.getEdges();
   const node = instance.getNode(`${id}`);
-  var [inputDataValue, SetInputDataValue] = useState(data.value);
-
-  const onclickHandle = () => {
-    let nid = "" + nanoid();
-    let edgeid = "e" + id + "" + nid + "";
-    instance.addNodes({
-      id: nid,
-      type: "mindmap",
-      data: { label: "ooooooooo" },
-      position: { x: node.position.x + 250, y: node.position.y },
-    });
-
-    instance.addEdges({ id: edgeid, source: id, target: nid, animated: true });
-    dispatch(addChildNode({ parentid: id }));
-    console.log(nodes);
-    console.log(edges);
-  };
-
-
-
-  function findingalldeletenodesId(tempid, pdeletedNodesId, omedges) {
-    let count = 0;
-    let deletedSiblingsId = [];
-
-    for (let i = 0; i < omedges.length; i++) {
-      if (omedges[i].source === tempid) {
-        deletedSiblingsId.push(omedges[i].target);
-        // Found at least one child
-        count = 1;
-      }
-    }
-
-    // ye leaf node hai and base statement
-    if (count === 0) {
-      return [...pdeletedNodesId, tempid];
-    }
-
-    // ye sibling hai
-    for (let j = 0; j < deletedSiblingsId.length; j++) {
-      pdeletedNodesId = findingalldeletenodesId(
-        deletedSiblingsId[j],
-        pdeletedNodesId,
-        omedges
-      );
-    }
-
-    return [...pdeletedNodesId, tempid];
-  }
-
-  const [isUpdating, setIsUpdating] = useState(false);
-
-  const onLayout = useCallback(
-    (direction) => {
-      if (isUpdating) return;
-
-      setIsUpdating(true);
-
-      const layouted = getLayoutedElements(nodes, edges, { direction });
-
-      instance.setNodes([...layouted.nodes]);
-      instance.setEdges([...layouted.edges]);
-
-      //  cyclic dependency aa rhi thi isliye kra
-      setTimeout(() => {
-        dispatch(
-          applyNodeChanges({ changes: JSON.stringify([...layouted.nodes]) })
-        );
-        dispatch(
-          applyEdgeChanges({ changes: JSON.stringify([...layouted.edges]) })
-        );
-        setIsUpdating(false);
-      }, 0);
-
-      window.requestAnimationFrame(() => {
-        instance.fitView();
-      });
-    },
-    [nodes, edges]
-  );
-
-  const onclickdelete = () => {
-    let deletedNodesId = findingalldeletenodesId(id, [], omedges);
-
-    let newNodes = omnodes.filter(
-      (oknode) => !deletedNodesId.includes(oknode.id)
-    );
-    let newEdges = omedges.filter(
-      (okedge) =>
-        !deletedNodesId.includes(okedge.source) &&
-        !deletedNodesId.includes(okedge.target)
-    );
-
-
-    // console.log("before from nodes");
-    // console.log(nodes);
-    // console.log(typeof nodes);
-    // console.log("*********************************");
-
-    // console.log("before from reduxnodes");
-    // console.log(omnodes);
-    // console.log(typeof omnodes);
-    // console.log("*********************************");
-
-    
-    instance.setNodes([...newNodes]);
-    instance.setEdges([...newEdges]);
-
-    onLayout("LR");
-  };
-
-  useLayoutEffect(() => {
-    onLayout("LR");
-  });
-
-  const onChange = (evt) => {
-    SetInputDataValue(evt.target.value);
-    dispatch(updateNodeLabel({ nodeId: id, label: inputDataValue }));
-    for (let i = 0; i < omnodes.length; i++) {
-      if (omnodes[i].id == id) {
-        console.log(omnodes[i].data);
-      }
-    }
-  };
+  // console.log(node.data.label);
+  const [rows, setrows] = useState(1);
 
   //added window listner
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.addEventListener("resize", instance.fitView);
 
     return () => {
@@ -180,81 +113,197 @@ export function FlowBlockTemplate({ id, data }) {
     };
   }, []);
 
-  // nothing is working other than top and left\
+  const onLayout = useCallback(
+    (direction) => {
+      const { nodes: layoutedNodes, edges: layoutedEdges } =
+        getLayoutedElements(nodes, edges, direction);
 
+      console.log("onlayout......nodes      edges");
+      console.log(nodes);
+      console.log(edges);
+      console.log("onlayout......layooutednodes      layoutededges");
+      console.log(layoutedNodes);
+      console.log(layoutedEdges);
+      instance.setNodes((prev) => [...layoutedNodes]);
+      instance.setEdges((prev) => [...layoutedEdges]);
 
+      // instance.fitView()
+      window.requestAnimationFrame(() => instance.fitView());
+    },
+    [nodes.position, edges, instance]
+  );
 
+  useLayoutEffect(() => {
+    onLayout("LR");
+  }, []);
 
-  
-  const handleStyle = {
-    left:160,
-    top: -5.5,
+  // add krega node but u can use this as well .........  const deleteElements = instance.deleteElements;
+  //i dont know what it takes as parameter
+  const onclickHandle = () => {
+    if(data.label==""){
+    return  alert("Hey User!!!!!!! first write something in node ........");
+    
+    }
 
-background:"white"
+    let nid = "" + nanoid();
+    let edgeid = "e" + id + "" + nid + "";
 
+    instance.setNodes((prev) => [
+      ...prev,
+      {
+        id: nid,
+        type: "mindmap",
+        data: { label: "" },
+        position: { x: 0, y: 0 },
+      },
+    ]);
+    const edgeType = "smoothstep";
+    instance.setEdges((prev) => [
+      ...prev,
+      { id: edgeid, source: id, target: nid, type: edgeType, animated: true },
+    ]);
+    // dispatch(addChildNode({ parentid: id }));
   };
+
+  const onclickdelete = () => {
+    let deletedNodesId = findingalldeletenodesId(id, [], edges);
+    console.log("in onclickdelete nodes , deletenodesid , id ,edges");
+    console.log(nodes);
+    console.log(deletedNodesId);
+    console.log(id);
+    console.log(edges);
+
+    let demonodes = nodes.filter(
+      (oknode) => !deletedNodesId.includes(oknode.id)
+    );
+    let demoedges = edges.filter(
+      (okedge) =>
+        !deletedNodesId.includes(okedge.source) &&
+        !deletedNodesId.includes(okedge.target)
+    );
+    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+      demonodes,
+      demoedges,
+      "LR"
+    );
+    instance.setNodes((prev) => [...layoutedNodes]);
+    instance.setEdges((prev) => [...layoutedEdges]);
+    window.requestAnimationFrame(() => instance.fitView());
+
+    setTimeout(() => {
+      const { nodes: ekaurlayoutedNodes, edges: ekaurlayoutedEdges } =
+        getLayoutedElements(layoutedNodes, layoutedEdges, "LR");
+      instance.setNodes((prev) => [...ekaurlayoutedNodes]);
+      instance.setEdges((prev) => [...ekaurlayoutedEdges]);
+      window.requestAnimationFrame(() => instance.fitView());
+      // window.requestAnimationFrame(() => onLayout("LR"))
+    }, 0);
+
+    // instance.setNodes((prev) => prev.filter((oknode) => !deletedNodesId.includes(oknode.id)));
+
+    // instance.setEdges((prev) => prev.filter((okedge) =>!deletedNodesId.includes(okedge.source) &&!deletedNodesId.includes(okedge.target)));
+    // onLayout("LR")
+  };
+
+  const onChange = (evt) => {
+    SetInputDataValue(evt.target.value);
+    // dispatch(updateNodeLabel({ nodeId: id, label: inputDataValue }));
+
+    let tempRows = Math.ceil(evt.target.value.length / 15);
+    // setrows(tempRows);
+
+    instance.setNodes((pre) =>
+      pre.map((ok) => {
+        if (ok.id != id) {
+          return ok;
+        } else {
+          return {
+            ...ok,
+            data: {
+              ...ok.data,
+              label: evt.target.value,
+            },
+          };
+        }
+      })
+    );
+  };
+
+  // nothing is working other than top and left .........i think react flow will override some property when rendering
+  // const handleStyle = {
+  //   left: 160,
+  //   top: -5.5,
+  //   background: "white",
+  // };
 
   return (
     <>
       <div className=" border p-1 shadow-md rounded-lg bg-white">
-      {/* <div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400"> */}
-
-
-
-
-
-      <textarea
-      
+        {id !== "1" ? (
+          <>
+            <textarea
+              value={inputDataValue}
+              onChange={onChange}
+              className="resize-none border rounded-md p-2"
+              style={{ height: "auto", overflow: "hidden", minHeight: "80px" }}
+              rows={3}
+              placeholder="Enter text..."
+            >
+              {inputDataValue}
+            </textarea>
+            <Handle
+              type="target"
+              className=""
+              position={Position.Left}
+            ></Handle>
+          </>
+        ) : (
+          <textarea
             value={inputDataValue}
+            disabled="disabled"
             onChange={onChange}
-            className="resize-none border rounded-md p-2"
-            style={{ height: 'auto',overflow:'hidden', minHeight: '80px' }}
+            className="resize-none border cursor-not-allowed rounded-md p-2"
+            style={{ height: "auto", overflow: "hidden", minHeight: "80px" }}
+            rows={1}
             placeholder="Enter text..."
-        />
-        {/* <div>
-          <input
-            id="text"
-            value={inputDataValue}
-            name="text"
-            onChange={onChange}
-            className="nodrag text-center"
-          />
-        </div> */}
-        {id !== "1" ? (<>
-          <Handle type="target" className="" position={Position.Left}></Handle>
-</>
+          >
+            {inputDataValue}
+          </textarea>
+        )}
+        <Handle type="source" position={Position.Right} onClick={onclickHandle}>
+          <Addsvg></Addsvg>
+        </Handle>
+
+        {/* we have to define it 2 times i dont know why, if we dont ,it just break into shambles */}
+        {id !== "1" ? (
+          <Handle
+            onClick={() => {
+              onclickdelete();
+            }}
+            position={Position.Top}
+            style={{position:"Relative",top:-102, left:170}}
+            id="a"
+          >
+            <CrossSvg></CrossSvg>
+          </Handle>
         ) : (
           <></>
         )}
-        
-        <Handle
-          type="source"
-          position={Position.Right}
-          onClick={onclickHandle}
-        >
-          
-        </Handle>
 
-        <Handle
-          onClick={() => {
-            onclickdelete();
-          }}
-          position={Position.Bottom}
-          id="a"
-          style={handleStyle}
-        >
-<svg width="20px" height="20px" viewBox="0 0 32 32" version="1.1"  className=" cursor-pointer   hover:animate-pulse" >
-    
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" >
-        <g id="Icon-Set-Filled"  transform="translate(-570.000000, -1089.000000)" fill="#000000">
-            <path d="M591.657,1109.24 C592.048,1109.63 592.048,1110.27 591.657,1110.66 C591.267,1111.05 590.633,1111.05 590.242,1110.66 L586.006,1106.42 L581.74,1110.69 C581.346,1111.08 580.708,1111.08 580.314,1110.69 C579.921,1110.29 579.921,1109.65 580.314,1109.26 L584.58,1104.99 L580.344,1100.76 C579.953,1100.37 579.953,1099.73 580.344,1099.34 C580.733,1098.95 581.367,1098.95 581.758,1099.34 L585.994,1103.58 L590.292,1099.28 C590.686,1098.89 591.323,1098.89 591.717,1099.28 C592.11,1099.68 592.11,1100.31 591.717,1100.71 L587.42,1105.01 L591.657,1109.24 L591.657,1109.24 Z M586,1089 C577.163,1089 570,1096.16 570,1105 C570,1113.84 577.163,1121 586,1121 C594.837,1121 602,1113.84 602,1105 C602,1096.16 594.837,1089 586,1089 L586,1089 Z" id="cross-circle" >
+        {id !== "1" ? (
+          <Handle
+            onClick={() => {
+              onclickdelete();
+            }}
+            position={Position.Left}
+            id="a"
+            
+          >
+          <ImageaddSvg></ImageaddSvg>
+          </Handle>
+        ):(<></>)}
 
-</path>
-        </g>
-    </g>
-</svg>
 
-        </Handle>
       </div>
     </>
   );
