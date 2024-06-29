@@ -1,7 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector  } from "react-redux";
 import React, { useCallback, useEffect } from "react";
 import "reactflow/dist/style.css";
 import FlowBlockTemplate from "./FlowBlockTemplate";
+
+
 
 import ReactFlow, {
   Controls,
@@ -13,11 +15,13 @@ import ReactFlow, {
   MiniMap,
   BackgroundVariant,
   ControlButton,
+  ConnectionLineType,
   // applyEdgeChanges
   // ******************************************* I *** spent 6 hrs just bcoz i made up a same name of reducer which was already there in reactflow library,
 } from "reactflow";
 import { applyNodeChanges, applyEdgeChanges } from "../features/flow/NewBoxSlice";
 import { MagicWandIcon } from "@radix-ui/react-icons";
+import { Download } from "./Download";
 
 
 const nodeTypes = {
@@ -32,7 +36,15 @@ function Flow() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const instance = useReactFlow();
   const dispatch =useDispatch()
-  
+
+
+  const onConnect = useCallback(
+    (params) =>
+      setEdges((eds) =>
+        addEdge({ ...params, type: ConnectionLineType.SmoothStep, animated: true }, eds)
+      ),
+    []
+  );
  
   function om (){
     console.log(initialNodes,initialEdges)
@@ -47,14 +59,17 @@ function Flow() {
       nodeTypes={nodeTypes}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
+      onConnect={onConnect}
+      connectionLineType={ConnectionLineType.SmoothStep}
       fitView 
       className="overflow-hidden "
     >
       {" "}
       <Panel position="top-right"></Panel>
       <Controls showInteractive={true} >
-        <ControlButton  onClick={() => alert('future functionaly button')} >
-          <MagicWandIcon></MagicWandIcon>
+        <ControlButton  >
+          {/* <MagicWandIcon></MagicWandIcon> */}
+          <Download></Download>
           
         </ControlButton>
       </Controls>
