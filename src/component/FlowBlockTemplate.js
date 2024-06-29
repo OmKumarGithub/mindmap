@@ -12,24 +12,79 @@ import Dagre from "@dagrejs/dagre";
 import CrossSvg from "./CrossSvg";
 
 // *************************BOLIER PLATE CODE***************************
-const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-const getLayoutedElements = (nodes, edges, options) => {
-  g.setGraph({ rankdir: options.direction });
+const dagreGraph = new Dagre.graphlib.Graph();
+dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-  edges.forEach((edge) => g.setEdge(edge.source, edge.target));
-  nodes.forEach((node) => g.setNode(node.id, node));
+const nodeWidth = 172;
+const nodeHeight = 136;
 
-  Dagre.layout(g);
-  return {
-    nodes: nodes.map((node) => {
-      const { x, y } = g.node(node.id);
+const getLayoutedElements = (nodes, edges, direction = "TB") => {
+  const isHorizontal = direction === "LR";
+  dagreGraph.setGraph({ rankdir: direction });
 
-      return { ...node, position: { x, y } };
-    }),
-    edges,
-  };
+  nodes.forEach((node) => {
+    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+  });
+
+  edges.forEach((edge) => {
+    dagreGraph.setEdge(edge.source, edge.target);
+  });
+
+  Dagre.layout(dagreGraph);
+
+  nodes.forEach((node) => {
+    const nodeWithPosition = dagreGraph.node(node.id);
+    node.targetPosition = isHorizontal ? "left" : "top";
+    node.sourcePosition = isHorizontal ? "right" : "bottom";
+
+    // We are shifting the dagre node position (anchor=center center) to the top left
+    // so it matches the React Flow node anchor point (top left).
+    node.position = {
+      x: nodeWithPosition.x - nodeWidth / 2,
+      y: nodeWithPosition.y - nodeHeight / 2,
+    };
+
+    return node;
+  });
+
+  return { nodes, edges };
 };
+
+// const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+//   initialNodes,
+//   initialEdges
+// );
 // ***************************************************************************
+
+//*************************************************** */
+function findingalldeletenodesId(tempid, pdeletedNodesId, funParEdges) {
+  let count = 0;
+  let deletedSiblingsId = [];
+
+  for (let i = 0; i < funParEdges.length; i++) {
+    if (funParEdges[i].source === tempid) {
+      deletedSiblingsId.push(funParEdges[i].target);
+      count = 1;
+    }
+  }
+
+  // ye leaf node hai and base statement
+  if (count === 0) {
+    return [...pdeletedNodesId, tempid];
+  }
+
+  // ye sibling hai
+  for (let j = 0; j < deletedSiblingsId.length; j++) {
+    pdeletedNodesId = findingalldeletenodesId(
+      deletedSiblingsId[j],
+      pdeletedNodesId,
+      funParEdges
+    );
+  }
+
+  return [...pdeletedNodesId, tempid];
+}
+// *********************************************************
 
 //ye id jo hum parameter mein de rhe hein wo reactflow khud detect kar rha hai
 //......reactflow ke andar ek parameter pass kr rkha hai nodetypes naam ka aur wo ek object leta hai
@@ -48,137 +103,111 @@ export function FlowBlockTemplate({ id, data }) {
   const nodes = instance.getNodes();
   const edges = instance.getEdges();
   const node = instance.getNode(`${id}`);
-  console.log(node.data.label)
+  console.log(node.data.label);
   const [rows, setrows] = useState(1);
 
-  // add krega node but u can use this as well .........  const deleteElements = instance.deleteElements;
-  //i dont know what it takes as parameter
-  const onclickHandle = () => {
-    let nid = "" + nanoid();
-    let edgeid = "e" + id + "" + nid + "";
-    instance.addNodes({
-      id: nid,
-      type: "mindmap",
-      data: { label: "ooooooooo" },
-      position: { x: node.position.x + 250, y: node.position.y },
-    });
-
-    instance.addEdges({ id: edgeid, source: id, target: nid, animated: true });
-    dispatch(addChildNode({ parentid: id }));
-    console.log(nodes);
-    console.log(edges);
-  };
-
-  function findingalldeletenodesId(tempid, pdeletedNodesId, omedges) {
-    let count = 0;
-    let deletedSiblingsId = [];
-
-    for (let i = 0; i < omedges.length; i++) {
-      if (omedges[i].source === tempid) {
-        deletedSiblingsId.push(omedges[i].target);
-        count = 1;
-      }
-    }
-
-    // ye leaf node hai and base statement
-    if (count === 0) {
-      return [...pdeletedNodesId, tempid];
-    }
-
-    // ye sibling hai
-    for (let j = 0; j < deletedSiblingsId.length; j++) {
-      pdeletedNodesId = findingalldeletenodesId(
-        deletedSiblingsId[j],
-        pdeletedNodesId,
-        omedges
-      );
-    }
-
-    return [...pdeletedNodesId, tempid];
-  }
-  
-  const onLayout = useCallback(
-    (direction) => {
-      if (isUpdating) return;
-
-      setIsUpdating(true);
-
-      const layouted = getLayoutedElements(nodes, edges, { direction });
-
-      instance.setNodes([...layouted.nodes]);
-      instance.setEdges([...layouted.edges]);
-
-      //  cyclic dependency aa rhi thi isliye kra
-      setTimeout(() => {
-        dispatch(
-          applyNodeChanges({ changes: JSON.stringify([...layouted.nodes]) })
-        );
-        dispatch(
-          applyEdgeChanges({ changes: JSON.stringify([...layouted.edges]) })
-        );
-        setIsUpdating(false);
-      }, 0);
-
-      window.requestAnimationFrame(() => {
-        instance.fitView();
-      });
-    },
-    [nodes, edges]
-  );
-
-  const onclickdelete = () => {
-    let deletedNodesId = findingalldeletenodesId(id, [], omedges);
-
-    let newNodes = omnodes.filter(
-      (oknode) => !deletedNodesId.includes(oknode.id)
-    );
-    let newEdges = omedges.filter(
-      (okedge) =>
-        !deletedNodesId.includes(okedge.source) &&
-        !deletedNodesId.includes(okedge.target)
-    );
-
-    // console.log("before from nodes");
-    // console.log(nodes);
-    // console.log(typeof nodes);
-    // console.log("*********************************");
-
-    // console.log("before from reduxnodes");
-    // console.log(omnodes);
-    // console.log(typeof omnodes);
-    // console.log("*********************************");
-
-    instance.setNodes([...newNodes]);
-    instance.setEdges([...newEdges]);
-
-    onLayout("LR");
-  };
-
-  useLayoutEffect(() => {
-    onLayout("LR");
-  });
-
-  const onChange = (evt) => {
-    SetInputDataValue(evt.target.value);
-    dispatch(updateNodeLabel({ nodeId: id, label: inputDataValue }));
-    for (let i = 0; i < omnodes.length; i++) {
-      if (omnodes[i].id == id) {
-        console.log(omnodes[i].data);
-      }
-
-      let tempRows = Math.ceil(evt.target.value.length / 15);
-      setrows(tempRows);
-    }
-  };
-
   //added window listner
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.addEventListener("resize", instance.fitView);
 
     return () => {
       window.removeEventListener("resize", instance.fitView);
     };
   }, []);
+  //  instance.setNodes(prev => [...layouted.nodes]);
+  //       instance.setEdges(prev =>[...layouted.edges]);
+  const onLayout = useCallback(
+    (direction) => {
+      const { nodes: layoutedNodes, edges: layoutedEdges } =
+        getLayoutedElements(nodes, edges, direction);
+
+      // setNodes([...layoutedNodes]);
+      // setEdges([...layoutedEdges]);
+      instance.setNodes((prev) => [...layoutedNodes]);
+      instance.setEdges((prev) => [...layoutedEdges]);
+    },
+    [nodes, edges]
+  );
+
+  useLayoutEffect(() => {
+    onLayout("LR");
+  }, []);
+
+  // add krega node but u can use this as well .........  const deleteElements = instance.deleteElements;
+  //i dont know what it takes as parameter
+  const onclickHandle = () => {
+    let nid = "" + nanoid();
+    let edgeid = "e" + id + "" + nid + "";
+
+    instance.setNodes((prev) => [
+      ...prev,
+      {
+        id: nid,
+        type: "mindmap",
+        data: { label: "" },
+        position: { x: 0, y: 0 },
+      },
+    ]);
+    const edgeType = "smoothstep";
+    instance.setEdges((prev => [...prev , { id: edgeid, source: id, target: nid, type: edgeType, animated: true  }]))
+    // dispatch(addChildNode({ parentid: id }));
+
+    console.log(nodes);
+    console.log(edges);
+  };
+
+  const onclickdelete = () => {
+    let deletedNodesId = findingalldeletenodesId(id, [], edges);
+
+    // let newNodes = omnodes.filter(
+    //   (oknode) => !deletedNodesId.includes(oknode.id)
+    // );
+    // let newEdges = omedges.filter(
+    //   (okedge) =>
+    //     !deletedNodesId.includes(okedge.source) &&
+    //     !deletedNodesId.includes(okedge.target)
+    // );
+    instance.setNodes((prev) =>
+      prev.filter((oknode) => !deletedNodesId.includes(oknode.id))
+    );
+    instance.setEdges((prev) =>
+      prev.filter(
+        (okedge) =>
+          !deletedNodesId.includes(okedge.source) &&
+          !deletedNodesId.includes(okedge.target)
+      )
+    );
+
+    onLayout("LR");
+  };
+
+  const onChange = (evt) => {
+    SetInputDataValue(evt.target.value);
+    dispatch(updateNodeLabel({ nodeId: id, label: inputDataValue }));
+    for (let i = 0; i < nodes.length; i++) {
+      if (nodes[i].id == id) {
+        console.log(omnodes[i].data);
+      }
+    }
+    let tempRows = Math.ceil(evt.target.value.length / 15);
+    setrows(tempRows);
+
+    instance.setNodes((pre) =>
+      pre.map((ok) => {
+        if (ok.id != id) {
+          return ok;
+        } else {
+          return {
+            ...ok,
+            data: {
+              ...ok.data,
+              label: evt.target.value,
+            },
+          };
+        }
+      })
+    );
+  };
 
   // nothing is working other than top and left .........i think react flow will override some property when rendering
   const handleStyle = {
@@ -193,6 +222,7 @@ export function FlowBlockTemplate({ id, data }) {
         {/* <div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400"> */}
 
         <textarea
+         value={inputDataValue}
           onChange={onChange}
           className="resize-none border rounded-md p-2"
           style={{ height: "auto", overflow: "hidden", minHeight: "80px" }}

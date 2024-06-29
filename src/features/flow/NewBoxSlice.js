@@ -5,82 +5,58 @@ const position = { x: 0, y: 0 };
 const edgeType = "smoothstep";
 
 const initialState = {
-  nodes: [
-    {
-        "id": "3",
-        "type": "mindmap",
-        "data": {
-            "label": "ooooooooo",
-        },
-        "position": {
-            "x": 577.5,
-            "y": 16.5
-        },
-        "positionAbsolute": {
-            "x": 577.5,
-            "y": 16.5
-        },
-        "x": 577.5,
-        "y": 16.5,
-        "rank": 4,
-        "width": 156,
-        "height": 33
-    },
-    {
-        "id": "2",
-        "type": "mindmap",
-        "data": {
-            "label": "oribaba"
-        },
-        "position": {
-            "x": 336.5,
-            "y": 16.5
-        },
-        "positionAbsolute": {
-            "x": 336.5,
-            "y": 16.5
-        },
-        "x": 336.5,
-        "y": 16.5,
-        "rank": 2,
-        "width": 191,
-        "height": 33
-    },
-    {
-        "id": "1",
-        "type": "mindmap",
-        "data": {
-            "label": "adsvn000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 dv"
-        },
-        "position": {
-            "x": 95.5,
-            "y": 16.5
-        },
-        "parentNode": null,
-        "positionAbsolute": {
-            "x": 95.5,
-            "y": 16.5
-        },
-        "x": 95.5,
-        "y": 16.5,
-        "rank": 0,
-        "width": 191,
-        "height": 33
-    }
-  ],
+  nodes:[{
+    id: '1',
+    type: 'mindmap',
+    data: { label: 'input' },
+    position,
+  },
+  {
+    id: '2',
+    type: 'mindmap',
+    data: { label: 'node 2' },
+    position,
+  },
+  {
+    id: '2a',
+    type: 'mindmap',
+    data: { label: 'node 2a' },
+    position,
+  },
+  {
+    id: '2b',
+    type: 'mindmap',
+    data: { label: 'node 2b' },
+    position,
+  },
+  {
+    id: '2c',
+    type: 'mindmap',
+    data: { label: 'node 2c' },
+    position,
+  },
+  {
+    id: '2d',
+    type: 'mindmap',
+    data: { label: 'node 2d' },
+    position,
+  },
+  {
+    id: '3',
+    type: 'mindmap',
+    data: { label: 'node 3' },
+    position,
+  },
+
+],
   edges:[
-    {
-        "id": "e23",
-        "source": "2",
-        "target": "3",
-        "animated": true
-    },
-    {
-        "id": "e12",
-        "source": "1",
-        "target": "2",
-        "animated": true
-    }
+    { id: 'e12', source: '1', target: '2', type: edgeType, animated: true },
+    { id: 'e13', source: '1', target: '3', type: edgeType, animated: true },
+    { id: 'e22a', source: '2', target: '2a', type: edgeType, animated: true },
+    { id: 'e22b', source: '2', target: '2b', type: edgeType, animated: true },
+    { id: 'e22c', source: '2', target: '2c', type: edgeType, animated: true },
+    { id: 'e2c2d', source: '2c', target: '2d', type: edgeType, animated: true },
+ 
   ],
   isNodesEdgesStateChanged: false,
   fun: null,
