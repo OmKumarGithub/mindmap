@@ -10,6 +10,7 @@ import { Handle, Position, useReactFlow } from "reactflow";
 import { nanoid } from "nanoid/non-secure";
 import Dagre from "@dagrejs/dagre";
 import CrossSvg from "./CrossSvg";
+import Addsvg from "./Addsvg";
 
 // *************************BOLIER PLATE CODE***************************
 const dagreGraph = new Dagre.graphlib.Graph();
@@ -233,46 +234,32 @@ export function FlowBlockTemplate({ id, data }) {
     <>
       <div className=" border p-1 shadow-md rounded-lg bg-white">
         {/* <div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400"> */}
-
-        <textarea
-         value={inputDataValue}
-          onChange={onChange}
-          className="resize-none border rounded-md p-2"
-          style={{ height: "auto", overflow: "hidden", minHeight: "80px" }}
-          rows={rows}
-          placeholder="Enter text..."
-        >
-          {inputDataValue}
-        </textarea>
-
-        {id !== "1" ? (
+     
+        { id !== "1" ? 
           <>
-            <Handle
-              type="target"
-              className=""
-              position={Position.Left}
-            ></Handle>
+            <textarea value={inputDataValue} onChange={onChange}  className="resize-none border rounded-md p-2" style={{ height: "auto", overflow: "hidden", minHeight: "80px" }} rows={rows} placeholder="Enter text...">
+                {inputDataValue} 
+            </textarea>
+            <Handle type="target"  className="" position={Position.Left}></Handle> 
+            <Handle onClick={() => {onclickdelete()}}  position={Position.Bottom} id="a"style={handleStyle}>
+               <CrossSvg></CrossSvg>
+            </Handle>
           </>
-        ) : (
-          <></>
-        )}
+          :<textarea value={inputDataValue}   disabled="disabled" onChange={onChange}  className="resize-none border cursor-not-allowed rounded-md p-2"style={{ height: "auto", overflow: "hidden", minHeight: "80px" }}  rows={rows}  placeholder="Enter text...">{inputDataValue}</textarea>
+        
+         
+        }
 
         <Handle
           type="source"
           position={Position.Right}
           onClick={onclickHandle}
-        ></Handle>
-
-        <Handle
-          onClick={() => {
-            onclickdelete();
-          }}
-          position={Position.Bottom}
-          id="a"
-          style={handleStyle}
+          style={{background: "white"}}
         >
-          <CrossSvg></CrossSvg>
+          <Addsvg></Addsvg>
         </Handle>
+
+       
       </div>
     </>
   );
