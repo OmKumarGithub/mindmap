@@ -18,30 +18,6 @@ const initialState = {
     position,
   },
   {
-    id: '2a',
-    type: 'mindmap',
-    data: { label: 'node 2a' },
-    position,
-  },
-  {
-    id: '2b',
-    type: 'mindmap',
-    data: { label: 'node 2b' },
-    position,
-  },
-  {
-    id: '2c',
-    type: 'mindmap',
-    data: { label: 'node 2c' },
-    position,
-  },
-  {
-    id: '2d',
-    type: 'mindmap',
-    data: { label: 'node 2d' },
-    position,
-  },
-  {
     id: '3',
     type: 'mindmap',
     data: { label: 'node 3' },
@@ -52,10 +28,7 @@ const initialState = {
   edges:[
     { id: 'e12', source: '1', target: '2', type: edgeType, animated: true },
     { id: 'e13', source: '1', target: '3', type: edgeType, animated: true },
-    { id: 'e22a', source: '2', target: '2a', type: edgeType, animated: true },
-    { id: 'e22b', source: '2', target: '2b', type: edgeType, animated: true },
-    { id: 'e22c', source: '2', target: '2c', type: edgeType, animated: true },
-    { id: 'e2c2d', source: '2c', target: '2d', type: edgeType, animated: true },
+   
  
   ],
   isNodesEdgesStateChanged: false,

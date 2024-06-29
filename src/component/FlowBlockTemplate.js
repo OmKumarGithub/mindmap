@@ -103,7 +103,7 @@ export function FlowBlockTemplate({ id, data }) {
   const nodes = instance.getNodes();
   const edges = instance.getEdges();
   const node = instance.getNode(`${id}`);
-  console.log(node.data.label);
+  // console.log(node.data.label);
   const [rows, setrows] = useState(1);
 
   //added window listner
@@ -125,8 +125,14 @@ export function FlowBlockTemplate({ id, data }) {
       // setEdges([...layoutedEdges]);
       instance.setNodes((prev) => [...layoutedNodes]);
       instance.setEdges((prev) => [...layoutedEdges]);
+
+
+      // instance.fitView()
+      window.requestAnimationFrame(() => instance.fitView());
+    
+
     },
-    [nodes, edges]
+    [nodes, edges , instance]
   );
 
   useLayoutEffect(() => {
@@ -159,26 +165,33 @@ export function FlowBlockTemplate({ id, data }) {
   const onclickdelete = () => {
     let deletedNodesId = findingalldeletenodesId(id, [], edges);
 
-    // let newNodes = omnodes.filter(
-    //   (oknode) => !deletedNodesId.includes(oknode.id)
-    // );
-    // let newEdges = omedges.filter(
-    //   (okedge) =>
-    //     !deletedNodesId.includes(okedge.source) &&
-    //     !deletedNodesId.includes(okedge.target)
-    // );
-    instance.setNodes((prev) =>
-      prev.filter((oknode) => !deletedNodesId.includes(oknode.id))
-    );
-    instance.setEdges((prev) =>
-      prev.filter(
-        (okedge) =>
-          !deletedNodesId.includes(okedge.source) &&
-          !deletedNodesId.includes(okedge.target)
-      )
-    );
+    console.log(nodes)
+    console.log(deletedNodesId)
+    console.log(id)
+    console.log(edges)
+//     let newNodes = omnodes.filter(
+//       (oknode) => !deletedNodesId.includes(oknode.id)
+//     );
+//     let newEdges = omedges.filter(
+//       (okedge) =>
+//         !deletedNodesId.includes(okedge.source) &&
+//         !deletedNodesId.includes(okedge.target)
+//     );
 
-    onLayout("LR");
+
+// instance.setNodes([...newNodes])
+// instance.setEdges([...newEdges])
+
+
+
+    instance.setNodes((prev) => prev.filter((oknode) => !deletedNodesId.includes(oknode.id)));
+    
+    instance.setEdges((prev) => prev.filter((okedge) =>!deletedNodesId.includes(okedge.source) &&!deletedNodesId.includes(okedge.target)));
+
+
+
+    // window.requestAnimationFrame(() => onLayout("LR"));
+    // onLayout("LR");
   };
 
   const onChange = (evt) => {
