@@ -140,6 +140,11 @@ export function FlowBlockTemplate({ id, data }) {
   // add krega node but u can use this as well .........  const deleteElements = instance.deleteElements;
   //i dont know what it takes as parameter
   const onclickHandle = () => {
+    if(data.label==""){
+    return  alert("Hey User!!!!!!! first write something in node ........");
+    
+    }
+
     let nid = "" + nanoid();
     let edgeid = "e" + id + "" + nid + "";
 

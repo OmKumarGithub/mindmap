@@ -8,6 +8,7 @@ const initialState = {
   nodes:[{
     id: '1',
     type: 'mindmap',
+    draggable:false,
     data: { label: 'File Name ........' },
     position,
   },
