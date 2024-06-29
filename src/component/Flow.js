@@ -21,6 +21,7 @@ import ReactFlow, {
 } from "reactflow";
 import { applyNodeChanges, applyEdgeChanges } from "../features/flow/NewBoxSlice";
 import { MagicWandIcon } from "@radix-ui/react-icons";
+import { Download } from "./Download";
 
 
 const nodeTypes = {
@@ -66,8 +67,9 @@ function Flow() {
       {" "}
       <Panel position="top-right"></Panel>
       <Controls showInteractive={true} >
-        <ControlButton  onClick={() => alert('future functionaly button')} >
-          <MagicWandIcon></MagicWandIcon>
+        <ControlButton  >
+          {/* <MagicWandIcon></MagicWandIcon> */}
+          <Download></Download>
           
         </ControlButton>
       </Controls>
