@@ -8,19 +8,19 @@ const initialState = {
   nodes:[{
     id: '1',
     type: 'mindmap',
-    data: { label: 'input' },
+    data: { label: 'File Name ........' },
     position,
   },
   {
     id: '2',
     type: 'mindmap',
-    data: { label: 'node 2' },
+    data: { label: 'Demo text 2......' },
     position,
   },
   {
     id: '3',
     type: 'mindmap',
-    data: { label: 'node 3' },
+    data: { label: 'Demo text 3 .......' },
     position,
   },
 

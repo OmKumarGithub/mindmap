@@ -1,12 +1,24 @@
 import React from 'react'
 
 const CrossSvg = () => {
+
+
+  let style={
+    position:"Relative",
+    top:-4,
+    left:-10,
+    background:"white",
+    borderRadius:50
+}
+
+
   return (
     <svg
     width="20px"
     height="20px"
     viewBox="0 0 32 32"
     version="1.1"
+    style={style}
     className=" cursor-pointer   hover:animate-pulse"
   >
     <g
