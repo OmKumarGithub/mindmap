@@ -7,6 +7,7 @@ import About  from "./pages/About";
 import Dashboard from "./pages/Dashboard";
 import Mindmaps from "./pages/Mindmaps";
 import Signup from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
 
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -26,6 +27,7 @@ function App() {
     <Route path="/mindmaps" element={<Mindmaps></Mindmaps>} />
     </Route>
     <Route path="/signup" element={<Signup />} />
+    <Route path="/signin" element={<SignIn />} />
     </Routes>
   </BrowserRouter>
   {/* <Navbar></Navbar>
