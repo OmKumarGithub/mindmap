@@ -85,7 +85,7 @@ function Navbar() {
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             {/* get started start */}
             <div>
-              <TogglerSwitch></TogglerSwitch>
+              {/* <TogglerSwitch></TogglerSwitch> */}
             </div>
             <button
               type="button"

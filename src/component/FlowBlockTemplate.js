@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addChildNode,
@@ -12,6 +12,7 @@ import Dagre from "@dagrejs/dagre";
 import CrossSvg from "./CrossSvg";
 import Addsvg from "./Addsvg";
 import ImageaddSvg from "./ImageaddSvg";
+import '../index.css'
 
 // *************************BOLIER PLATE CODE***************************
 const dagreGraph = new Dagre.graphlib.Graph();
@@ -139,7 +140,7 @@ export function FlowBlockTemplate({ id, data }) {
 
   // add krega node but u can use this as well .........  const deleteElements = instance.deleteElements;
   //i dont know what it takes as parameter
-  const onclickHandle = () => {
+  const onclickHandle = useCallback(() => {
     if(data.label==""){
     return  alert("Hey User!!!!!!! first write something in node ........");
     
@@ -148,24 +149,37 @@ export function FlowBlockTemplate({ id, data }) {
     let nid = "" + nanoid();
     let edgeid = "e" + id + "" + nid + "";
 
-    instance.setNodes((prev) => [
-      ...prev,
-      {
+    const edgeType = "smoothstep";
+
+
+
+      instance.addNodes( {
         id: nid,
         type: "mindmap",
         data: { label: "" },
         position: { x: 0, y: 0 },
-      },
-    ]);
-    const edgeType = "smoothstep";
-    instance.setEdges((prev) => [
-      ...prev,
-      { id: edgeid, source: id, target: nid, type: edgeType, animated: true },
-    ]);
-    // dispatch(addChildNode({ parentid: id }));
-  };
+      })
 
-  const onclickdelete = () => {
+     
+      instance.addEdges({ id: edgeid, source: id, target: nid, type: edgeType, animated: true })
+    // instance.setNodes((prev) => [
+    //   ...prev,
+      // {
+      //   id: nid,
+      //   type: "mindmap",
+      //   data: { label: "" },
+      //   position: { x: 0, y: 0 },
+      // },
+    // ]);
+    // const edgeType = "smoothstep";
+    // instance.setEdges((prev) => [
+    //   ...prev,
+      // { id: edgeid, source: id, target: nid, type: edgeType, animated: true },
+    // ]);
+    // dispatch(addChildNode({ parentid: id }));
+  },[nodes,edges]);
+
+  const onclickdelete = useCallback(() => {
     let deletedNodesId = findingalldeletenodesId(id, [], edges);
     console.log("in onclickdelete nodes , deletenodesid , id ,edges");
     console.log(nodes);
@@ -203,7 +217,7 @@ export function FlowBlockTemplate({ id, data }) {
 
     // instance.setEdges((prev) => prev.filter((okedge) =>!deletedNodesId.includes(okedge.source) &&!deletedNodesId.includes(okedge.target)));
     // onLayout("LR")
-  };
+  },[nodes,edges]);
 
   const onChange = (evt) => {
     SetInputDataValue(evt.target.value);
@@ -235,6 +249,14 @@ export function FlowBlockTemplate({ id, data }) {
   //   top: -5.5,
   //   background: "white",
   // };
+  const [file, setFile] = useState(null);
+    const fileInputRef = useRef(null);
+    
+
+
+  const onclickHandlingFile =()=>{
+
+  }
 
   return (
     <>
@@ -262,7 +284,7 @@ export function FlowBlockTemplate({ id, data }) {
             value={inputDataValue}
             disabled="disabled"
             onChange={onChange}
-            className="resize-none border cursor-not-allowed rounded-md p-2"
+            className="resize-none border  cursor-not-allowed rounded-md p-2"
             style={{ height: "auto", overflow: "hidden", minHeight: "80px" }}
             rows={1}
             placeholder="Enter text..."
@@ -293,13 +315,17 @@ export function FlowBlockTemplate({ id, data }) {
         {id !== "1" ? (
           <Handle
             onClick={() => {
-              onclickdelete();
+              onclickHandlingFile();
             }}
             position={Position.Left}
             id="a"
             
           >
-          <ImageaddSvg></ImageaddSvg>
+          {/* <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" /> */}
+
+           <ImageaddSvg></ImageaddSvg> 
+          {/* </input> */}
+          
           </Handle>
         ):(<></>)}
 
