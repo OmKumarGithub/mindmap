@@ -5,3 +5,43 @@
 
 
 
+.password-field input {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+
+.password-field input:before {
+  content: url("./logo.svg");
+}
+
+.ginput_container input {
+  padding-left: 30px;
+  background-image: url("./logo.svg");
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+  background-position: 10px 1rem;
+}
+
+.left-inner-addon {
+  position: relative;
+  width: 20px;
+}
+
+.left-inner-addon input {
+  padding-left: 24px;
+  width: 10px; /* 200px - 30px */
+}
+
+.left-inner-addon img {
+  position: absolute;
+  left: 0px;
+  /* padding: 10px 12px; */
+  pointer-events: none;
+  top: 1rem;
+}
+
+
+body {
+  overflow: hidden;
+}

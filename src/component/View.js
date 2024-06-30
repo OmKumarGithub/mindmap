@@ -4,7 +4,6 @@ import Text from "./Text";
 import { ischecked } from "../features/navbar/Togglebutton";
 import { useDispatch, useSelector } from "react-redux";
 import { Download } from "./Download";
-import Leftbar from "./Leftbar";
 
 function View() {
   const dispatcher = useDispatch();
@@ -35,7 +34,6 @@ function View() {
           className={`${width} m-1 drop-shadow-md h-[89vh] delay-50 shadow-2xl overflow-hidden`}
         >
           <Flow className="overflow-hidden"></Flow>
-          <Leftbar></Leftbar>
           <Download></Download>
         </div>
       </div>
