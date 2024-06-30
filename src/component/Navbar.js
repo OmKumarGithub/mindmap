@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ison } from "../features/navbar/hamburgerslice";
+import { ison } from "../functions/navbar/hamburgerslice";
 import TogglerSwitch from "./TogglerSwitch";
+import {Link,NavLink} from 'react-router-dom'
+import { useAuth0 } from "@auth0/auth0-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 function Navbar() {
   const dispatcher = useDispatch();
+  const { loginWithRedirect ,isAuthenticated,logout,user} = useAuth0();
   const updatedvalue = useSelector((state) => state.togglehamburger);
 
   useEffect(() => {
@@ -20,79 +25,121 @@ function Navbar() {
 
   return (
     <>
-      <nav className="drop-shadow-md bg-white border-gray-200 dark:bg-gray-900">
+      <nav className="drop-shadow-md bg-white border-gray-200 dark:bg-gray-800 sticky top-0 left-0 z-50  ">
         {/* navbar first div starts */}
         <div className="max-w-screen-3xl flex flex-wrap items-center justify-between mx-auto p-4">
           <div className="flex space-x-5">
             {/* logo and website name */}
-            <a
-              href="https://flowbite.com/"
+            {/* <NavLink
+              to="https://flowbite.com/"
               className="flex items-center space-x-3 rtl:space-x-reverse"
-            >
-              <img
+            > */}
+              {/* <img
                 src="https://flowbite.com/docs/images/logo.svg"
                 className="h-8"
                 alt="Flowbite Logo"
-              />
+              /> */}
               <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                Flowbite
+                MindMap
               </span>
-            </a>
+            {/* </NavLink> */}
 
             {/* left side */}
             <div
               className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
               id="navbar-cta"
             >
-              <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+              <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-800 dark:border-gray-700">
                 <li>
-                  <a
-                    href="#"
-                    className="block py-2 px-3 md:p-0 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:dark:text-blue-500"
+                  <NavLink
+                    to="/"
+                    className={({isActive})=>`block py-2 px-3 md:p-0 rounded ${isActive?"text-blue-500":"text-black  dark:text-white"}
+                    text-black hover:text-blue-400 
+                     dark:hover:text-blue-400 `}
                     aria-current="page"
                   >
                     Home
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                  <NavLink
+                    to="/about"
+                    className={({isActive})=>`block py-2 px-3 md:p-0 rounded ${isActive?"text-blue-500":"text-black  dark:text-white"}
+                    text-black hover:text-blue-400 
+                     dark:hover:text-blue-400 `}
                   >
                     About
-                  </a>
+                  </NavLink>
                 </li>
-                <li>
-                  <a
-                    href="#"
+                {/* <li>
+                  <NavLink
+                    to="#"
                     className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 d:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                   >
                     Services
-                  </a>
-                </li>
+                  </NavLink>
+                </li> */}
                 <li>
-                  <a
-                    href="#"
-                    className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                  <NavLink
+                    to="/Contact"
+                    className={({isActive})=>`block py-2 px-3 md:p-0 rounded ${isActive?"text-blue-500":"text-black  dark:text-white"}
+                    text-black hover:text-blue-400 
+                     dark:hover:text-blue-400 `}
                   >
                     Contact
-                  </a>
+                  </NavLink>
                 </li>
+                {
+                  isAuthenticated?( <li>
+                  <NavLink
+                    to="/dashboard"
+                    className={({isActive})=>`block py-2 px-3 md:p-0 rounded ${isActive?"text-blue-500":"text-black  dark:text-white"}
+                    text-black hover:text-blue-400 
+                     dark:hover:text-blue-400 `}
+                  >
+                    Dashboard                  
+                    </NavLink>
+                </li>):(<> </>)
+                }
               </ul>
             </div>
           </div>
           {/* right side starts*/}
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             {/* get started start */}
-            <div>
-              {/* <TogglerSwitch></TogglerSwitch> */}
-            </div>
-            <button
-              type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Get started
-            </button>
+         
+
+
+{isAuthenticated?(
+<span className="p-1 font-semibold border shadow-md rounded-md mr-2 pr-2 pl-2 dark:text-white dark:border-white cursor-pointer">
+<FontAwesomeIcon className=" pr-2" icon={faUser} /> 
+{user.name}
+
+ 
+</span>):<></>
+}      
+            <li className=" list-none">
+
+{
+  isAuthenticated?(
+    <button 
+                    className="text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+      Log Out
+    </button>
+  ):(
+         <button 
+                    className="text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+             onClick={() => loginWithRedirect()}>Log In</button>
+  )
+}
+            
+            
+                </li>
+
+
+
+
             {/* get started ends */}
 
             {/* hamburger starts */}
@@ -133,37 +180,37 @@ function Navbar() {
           <div className={`delay-150 w-full`} id="navbar-hamburger">
             <ul className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
               <li>
-                <a
-                  href="#"
+                <NavLink
+                  to="/"
                   className="block py-2 px-3 text-white bg-blue-700 rounded dark:bg-blue-600"
                   aria-current="page"
                 >
                   Home
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a
-                  href="#"
+                <NavLink
+                  to="/about"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
-                  About
-                </a>
+                  about
+                </NavLink>
               </li>
-              <li>
-                <a
-                  href="#"
+              {/* <li>
+                <NavLink
+                  to="#"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   Services
-                </a>
-              </li>
+                </NavLink>
+              </li> */}
               <li>
-                <a
-                  href="#"
+                <NavLink
+                  to="/Contact"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   Contact
-                </a>
+                </NavLink>
               </li>
             </ul>
           </div>
