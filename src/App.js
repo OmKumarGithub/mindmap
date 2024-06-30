@@ -4,6 +4,7 @@ import View from "./component/View";
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import About  from "./pages/About";
+import Dashboard from "./pages/Dashboard";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
@@ -18,7 +19,7 @@ function App() {
     <Route path="" element={<Home />}/>
     <Route path="/contact" element={<Contact />} />
     <Route path="/about" element={<About />} />
-
+    <Route path="/dashboard" element={<Dashboard />} />
     </Route>
     </Routes>
   </BrowserRouter>
