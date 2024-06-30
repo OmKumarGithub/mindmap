@@ -6,6 +6,8 @@ import Contact from "./pages/Contact";
 import About  from "./pages/About";
 import Dashboard from "./pages/Dashboard";
 import Mindmaps from "./pages/Mindmaps";
+import Signup from "./pages/SignUp";
+
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
@@ -23,6 +25,7 @@ function App() {
     <Route path="/dashboard" element={<Dashboard />} />
     <Route path="/mindmaps" element={<Mindmaps></Mindmaps>} />
     </Route>
+    <Route path="/signup" element={<Signup />} />
     </Routes>
   </BrowserRouter>
   {/* <Navbar></Navbar>
