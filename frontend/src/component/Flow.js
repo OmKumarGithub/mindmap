@@ -61,8 +61,9 @@ function Flow() {
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
       connectionLineType={ConnectionLineType.SmoothStep}
+      style={{ background: "#E5E4E2"}}
       fitView 
-      className="overflow-hidden "
+      className=" "
     >
       {" "}
       <Panel position="top-right"></Panel>
@@ -76,10 +77,10 @@ function Flow() {
       </Controls>
       
     
-      <Background variant={BackgroundVariant.Dots}  ></Background>
+      <Background  color="#5d6473" variant={BackgroundVariant.Dots}  ></Background>
       <MiniMap nodeStrokeWidth={3} pannable={true} />
       <Panel position="top-right">
-        <button onClick={om}>om</button>
+       
         {/* <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
       </Panel>
     </ReactFlow>
