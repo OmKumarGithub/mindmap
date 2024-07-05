@@ -134,6 +134,8 @@ export function FlowBlockTemplate({ id, data }) {
     [nodes.position, edges, instance]
   );
 
+
+
   useLayoutEffect(() => {
     onLayout("LR");
   }, []);
@@ -177,7 +179,7 @@ export function FlowBlockTemplate({ id, data }) {
       // { id: edgeid, source: id, target: nid, type: edgeType, animated: true },
     // ]);
     // dispatch(addChildNode({ parentid: id }));
-  },[nodes,edges]);
+  },[nodes,edges,instance]);
 
   const onclickdelete = useCallback(() => {
     let deletedNodesId = findingalldeletenodesId(id, [], edges);

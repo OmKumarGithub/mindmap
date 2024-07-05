@@ -1,8 +1,50 @@
 import React from 'react'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFolder,
+  faNetworkWired,
+  faHouse,
+  faBuilding,
+  faPhone,
+  faUser,
+  faSquareUpRight,
+  faCircleXmark,
+  faSquarePen
+  
 
+} from "@fortawesome/free-solid-svg-icons";
 export const File = ({demo}) => {
   return (
-      <div className="p-8 border  m-4 p-5 inline-block shadow-2xl rounded-md">
+      <div className="py-2 px-5 border  m-4  inline-block shadow-2xl rounded-md">
+      <FontAwesomeIcon
+      
+      style={{
+        position:"relative",
+        top:-20,
+        left:95,
+      }}
+      className='scale-150 '
+       icon={faCircleXmark} />
+      <FontAwesomeIcon 
+       style={{
+        position:"relative",
+        top:15,
+        left:80,
+      }}
+      className='scale-150'
+      
+      icon={faSquarePen} />
+      <FontAwesomeIcon 
+      
+      style={{
+        position:"relative",
+        top:50,
+        left:65,
+      }}
+      className='scale-150'
+      icon={faSquareUpRight} />
+
+      
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="80px"
@@ -31,7 +73,7 @@ export const File = ({demo}) => {
             fill="#1C274C"
           />
         </svg>
-        <div>{demo}</div>
+        <div className='shadow-md text-center rounded-md p-2'>{demo}</div>
       </div>
   )
 }
