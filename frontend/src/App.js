@@ -6,12 +6,13 @@ import Contact from "./pages/Contact";
 import About  from "./pages/About";
 import Dashboard from "./pages/Dashboard";
 import Mindmaps from "./pages/Mindmaps";
-import Signup from "./pages/SignUp";
+import Login from "./pages/Login";
 import SignIn from "./pages/SignIn";
 
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
+import Workspace from "./pages/Workspace";
 
 function App() {
   return (
@@ -25,8 +26,9 @@ function App() {
     <Route path="/about" element={<About />} />
     <Route path="/dashboard" element={<Dashboard />} />
     <Route path="/mindmaps" element={<Mindmaps></Mindmaps>} />
+    <Route path= "workspace" element={<Workspace></Workspace>}/>
     </Route>
-    <Route path="/signup" element={<Signup />} />
+    <Route path="/login" element={<Login />} />
     <Route path="/signin" element={<SignIn />} />
     </Routes>
   </BrowserRouter>

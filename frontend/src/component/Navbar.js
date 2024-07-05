@@ -6,7 +6,7 @@ import {Link,NavLink} from 'react-router-dom'
 import { useAuth0 } from "@auth0/auth0-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-
+import SignIn from "../pages/SignIn";
 function Navbar() {
   const dispatcher = useDispatch();
   const { loginWithRedirect ,isAuthenticated,logout,user} = useAuth0();
@@ -72,12 +72,22 @@ function Navbar() {
                 </li> */}
                 <li>
                   <NavLink
-                    to="/Contact"
+                    to="/contact"
                     className={({isActive})=>`block py-2 px-3 md:p-0 rounded ${isActive?"text-blue-500":"text-black  dark:text-white"}
                     text-black hover:text-blue-400 
                      dark:hover:text-blue-400 `}
                   >
                     Contact
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/workspace"
+                    className={({isActive})=>`block py-2 px-3 md:p-0 rounded ${isActive?"text-blue-500":"text-black  dark:text-white"}
+                    text-black hover:text-blue-400 
+                     dark:hover:text-blue-400 `}
+                  >
+                   Try Without Login
                   </NavLink>
                 </li>
                 {
@@ -119,9 +129,18 @@ function Navbar() {
       Log Out
     </button>
   ):(
+    <>
+        <NavLink to={"/mindmaps"}>
+         <button 
+                    className="text-white mr-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+             >Log In</button></NavLink>
+          <NavLink to={"/signup"}>
          <button 
                     className="text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-             onClick={() => loginWithRedirect()}>Log In</button>
+             >Sign Up</button></NavLink>
+
+           </>  
+             
   )
 }
             
@@ -197,10 +216,18 @@ function Navbar() {
               </li> */}
               <li>
                 <NavLink
-                  to="/Contact"
+                  to="/contact"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   Contact
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/workspace"
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  Try Without Login
                 </NavLink>
               </li>
             </ul>

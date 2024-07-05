@@ -24,19 +24,13 @@ function View() {
   return (
     <>
     
-      <div className="flex  space-x-1 overflow-hidden">
-        <div className={`${display} w-1/2 m-1 shadow-2xl delay-50 `}>
-          <Text></Text>
-          {/* <Download></Download> */}
-        </div>
-        {/* u need to define flow height bcoz it reactflow which cannot be rendered without  width and height */}
+      
         <div
-          className={`${width} m-1 drop-shadow-md h-[89vh] delay-50 shadow-2xl overflow-hidden`}
+          className={`w-full   h-[89vh] `}
         >
           <Flow className="overflow-hidden"></Flow>
-          <Download></Download>
+         
         </div>
-      </div>
     </>
   );
 }
