@@ -39,7 +39,7 @@ const initialState = {
  
   ],
   isNodesEdgesStateChanged: false,
-  fun: null,
+  fun: true,
 };
 
 const rfSlice = createSlice({
@@ -128,8 +128,8 @@ const rfSlice = createSlice({
     },
 
     setfun: (state, action) => {
-      const { pfun } = action.payload;
-      state.fun = pfun;
+      // const { pfun } = action.payload;
+      state.fun = !state.fun;
     },
 
   

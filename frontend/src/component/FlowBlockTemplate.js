@@ -4,6 +4,7 @@ import {
   addChildNode,
   applyEdgeChanges,
   applyNodeChanges,
+  setfun,
   updateNodeLabel,
 } from "../redux/actions/NewBoxSlice";
 import { Handle, Position, useReactFlow } from "reactflow";
@@ -18,7 +19,7 @@ import '../index.css'
 const dagreGraph = new Dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-const nodeWidth = 172;
+const nodeWidth = 195;
 const nodeHeight = 136;
 
 const getLayoutedElements = (nodes, edges, direction = "TB") => {
@@ -114,10 +115,9 @@ export function FlowBlockTemplate({ id, data }) {
     };
   }, []);
 
-  const onLayout = useCallback(
-    (direction) => {
+  const onLayout =  (direction) => {
       const { nodes: layoutedNodes, edges: layoutedEdges } =
-        getLayoutedElements(nodes, edges, direction);
+        getLayoutedElements(instance.getNodes(),instance.getEdges(), direction);
 
       console.log("onlayout......nodes      edges");
       console.log(nodes);
@@ -130,9 +130,8 @@ export function FlowBlockTemplate({ id, data }) {
 
       // instance.fitView()
       window.requestAnimationFrame(() => instance.fitView());
-    },
-    [nodes.position, edges, instance]
-  );
+    }
+ 
 
 
 
@@ -142,7 +141,7 @@ export function FlowBlockTemplate({ id, data }) {
 
   // add krega node but u can use this as well .........  const deleteElements = instance.deleteElements;
   //i dont know what it takes as parameter
-  const onclickHandle = useCallback(() => {
+  const onclickHandle = () => {
     if(data.label==""){
     return  alert("Hey User!!!!!!! first write something in node ........");
     
@@ -164,62 +163,55 @@ export function FlowBlockTemplate({ id, data }) {
 
      
       instance.addEdges({ id: edgeid, source: id, target: nid, type: edgeType, animated: true })
-    // instance.setNodes((prev) => [
-    //   ...prev,
-      // {
-      //   id: nid,
-      //   type: "mindmap",
-      //   data: { label: "" },
-      //   position: { x: 0, y: 0 },
-      // },
-    // ]);
-    // const edgeType = "smoothstep";
-    // instance.setEdges((prev) => [
-    //   ...prev,
-      // { id: edgeid, source: id, target: nid, type: edgeType, animated: true },
-    // ]);
-    // dispatch(addChildNode({ parentid: id }));
-  },[nodes,edges,instance]);
 
-  const onclickdelete = useCallback(() => {
-    let deletedNodesId = findingalldeletenodesId(id, [], edges);
+  }
+
+  const onclickdelete = () => {
+    let deletedNodesId = findingalldeletenodesId(id, [], instance.getEdges());
     console.log("in onclickdelete nodes , deletenodesid , id ,edges");
     console.log(nodes);
     console.log(deletedNodesId);
     console.log(id);
     console.log(edges);
 
-    let demonodes = nodes.filter(
+    let demonodes = instance.getNodes().filter(
       (oknode) => !deletedNodesId.includes(oknode.id)
     );
-    let demoedges = edges.filter(
+    let demoedges = instance.getEdges().filter(
       (okedge) =>
         !deletedNodesId.includes(okedge.source) &&
         !deletedNodesId.includes(okedge.target)
     );
+
+    const trialnodes = demonodes.map(n => ({
+      id: n.id,
+      type: n.type,
+      data:{label:n.data.label},
+      position: { x: 0, y: 0 }, // Setting position to x: 0, y: 0
+    }));
+
+    const trialedges = demoedges.map(e => ({
+      id: e.id,
+     source: e.source,
+     target: e.target,
+     type: "smoothstep", 
+     animated: true,
+    }));
+    
+
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-      demonodes,
-      demoedges,
+      trialnodes,
+      trialedges,
       "LR"
     );
     instance.setNodes((prev) => [...layoutedNodes]);
     instance.setEdges((prev) => [...layoutedEdges]);
+  dispatch(setfun())
     window.requestAnimationFrame(() => instance.fitView());
 
-    setTimeout(() => {
-      const { nodes: ekaurlayoutedNodes, edges: ekaurlayoutedEdges } =
-        getLayoutedElements(layoutedNodes, layoutedEdges, "LR");
-      instance.setNodes((prev) => [...ekaurlayoutedNodes]);
-      instance.setEdges((prev) => [...ekaurlayoutedEdges]);
-      window.requestAnimationFrame(() => instance.fitView());
-      // window.requestAnimationFrame(() => onLayout("LR"))
-    }, 0);
+   
 
-    // instance.setNodes((prev) => prev.filter((oknode) => !deletedNodesId.includes(oknode.id)));
-
-    // instance.setEdges((prev) => prev.filter((okedge) =>!deletedNodesId.includes(okedge.source) &&!deletedNodesId.includes(okedge.target)));
-    // onLayout("LR")
-  },[nodes,edges]);
+  }
 
   const onChange = (evt) => {
     SetInputDataValue(evt.target.value);
@@ -262,13 +254,15 @@ export function FlowBlockTemplate({ id, data }) {
 
   return (
     <>
-      <div className=" border p-1 shadow-md rounded-lg bg-white">
+      <div className=" border p-1 px-2 pt-2 outline-none  bg-gradient-to-r from-blue-500 to-[#1f2937]  font-semibold  rounded-xl"
+      style={{borderColor:"#111111"}}>
         {id !== "1" ? (
           <>
             <textarea
               value={inputDataValue}
               onChange={onChange}
-              className="resize-none border rounded-md p-2"
+          
+              className="resize-none border rounded-md p-2 text-black outline-none	         "
               style={{ height: "auto", overflow: "hidden", minHeight: "80px" }}
               rows={3}
               placeholder="Enter text..."
@@ -277,7 +271,8 @@ export function FlowBlockTemplate({ id, data }) {
             </textarea>
             <Handle
               type="target"
-              className=""
+              // className="hidden"
+              style={{opacity: 0}}
               position={Position.Left}
             ></Handle>
           </>
@@ -286,7 +281,7 @@ export function FlowBlockTemplate({ id, data }) {
             value={inputDataValue}
             disabled="disabled"
             onChange={onChange}
-            className="resize-none border  cursor-not-allowed rounded-md p-2"
+            className="resize-none border  cursor-not-allowed rounded-md p-2  text-black"
             style={{ height: "auto", overflow: "hidden", minHeight: "80px" }}
             rows={1}
             placeholder="Enter text..."
@@ -294,8 +289,8 @@ export function FlowBlockTemplate({ id, data }) {
             {inputDataValue}
           </textarea>
         )}
-        <Handle type="source" position={Position.Right} onClick={onclickHandle}>
-          <Addsvg></Addsvg>
+        <Handle type="source" className="outline-none" position={Position.Right} onClick={onclickHandle}>
+          <Addsvg className="outline-none" onClick={onclickHandle}></Addsvg>
         </Handle>
 
         {/* we have to define it 2 times i dont know why, if we dont ,it just break into shambles */}
@@ -305,7 +300,7 @@ export function FlowBlockTemplate({ id, data }) {
               onclickdelete();
             }}
             position={Position.Top}
-            style={{position:"Relative",top:-102, left:170}}
+            style={{position:"Relative",top:-110, left:188}}
             id="a"
           >
             <CrossSvg></CrossSvg>
@@ -321,6 +316,7 @@ export function FlowBlockTemplate({ id, data }) {
             }}
             position={Position.Left}
             id="a"
+          
             
           >
           {/* <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" /> */}

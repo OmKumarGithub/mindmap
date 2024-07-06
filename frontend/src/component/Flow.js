@@ -2,7 +2,7 @@ import { useDispatch, useSelector  } from "react-redux";
 import React, { useCallback, useEffect } from "react";
 import "reactflow/dist/style.css";
 import FlowBlockTemplate from "./FlowBlockTemplate";
-
+import TurboEdge from  "./Edge.tsx"
 
 
 import ReactFlow, {
@@ -51,17 +51,22 @@ function Flow() {
   }
 
 
+  const edgeTypes = {
+  turbo: TurboEdge,
+};
+
 
   return (
     <ReactFlow
       nodes={nodes}
       edges={edges}
       nodeTypes={nodeTypes}
+      // edgeTypes={edgeTypes}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
       connectionLineType={ConnectionLineType.SmoothStep}
-      style={{ background: "#E5E4E2"}}
+      // style={{ background: "#E5E4E2"}}
       fitView 
       className=" "
     >
@@ -75,9 +80,30 @@ function Flow() {
           
         </ControlButton>
       </Controls>
+      {/* <svg>
+        <defs>
+          <linearGradient id="edge-gradient">
+            <stop offset="0%" stopColor="#ae53ba" />
+            <stop offset="100%" stopColor="#2a8af6" />
+          </linearGradient>
+
+          <marker
+            id="edge-circle"
+            viewBox="-5 -5 10 10"
+            refX="0"
+            refY="0"
+            markerUnits="strokeWidth"
+            markerWidth="10"
+            markerHeight="10"
+            orient="auto"
+          >
+            <circle stroke="#2a8af6" strokeOpacity="0.75" r="2" cx="0" cy="0" />
+          </marker>
+        </defs>
+      </svg> */}
       
     
-      <Background  color="#5d6473" variant={BackgroundVariant.Dots}  ></Background>
+      <Background  color="#5d6473" size={1.5} variant={BackgroundVariant.Dots}  ></Background>
       <MiniMap nodeStrokeWidth={3} pannable={true} />
       <Panel position="top-right">
        

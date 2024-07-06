@@ -4,13 +4,14 @@ import { Background } from 'reactflow'
 const ImageaddSvg = () => {
     let style={
         position:"Relative",
-         top:-58,
+         top:-65,
         // left : -165,
+        left:-5,
         background :"white",
         borderRadius: 50,
     }
   return (
-    <svg  className={"box-shadow-md cursor-pointer hover:scale-110  ease-in-out duration-100"}fill="#000000" style={style} width="20px" height="20px" stroke ="#FFFFFF" viewBox="0 0 512 512" id="_x30_1" version="1.1">
+    <svg  className={"box-shadow-md cursor-pointer hover:scale-110  ease-in-out duration-100"}fill="#1d4ed8" style={style} width="20px" height="20px" stroke ="#FFFFFF" viewBox="0 0 512 512" id="_x30_1" version="1.1">
 
     <g>
     
