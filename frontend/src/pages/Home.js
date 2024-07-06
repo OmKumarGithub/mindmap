@@ -1,7 +1,7 @@
 import React from 'react'
 import {NavLink, Link } from 'react-router-dom'
 import { useAuth0 } from "@auth0/auth0-react";
-import brain from '../Home_photo.png'
+import brain from '../assests/Home_photo.png'
 import signin from './SignIn';
 const Home = () => {
 	const { loginWithRedirect ,isAuthenticated } = useAuth0();
@@ -21,7 +21,7 @@ const Home = () => {
 					
 				<NavLink to="/signin" >
 				<button 
-				className="bg-transparent z-10 text-white bg-zinc-800 hover:bg-blue-500  hover:text-black rounded shadow hover:shadow-lg py-2 px-4 border  border-blue-700 dark:border-blue-300 hover:border-transparent">
+				className="bg-transparent z-10  text-white bg-zinc-800 hover:bg-blue-500  hover:text-black rounded shadow hover:shadow-lg py-2 px-4 border  border-blue-700 dark:border-blue-300 hover:border-transparent">
 				
 				
 				Explore Now

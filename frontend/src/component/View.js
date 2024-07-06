@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import Flow from "./Flow";
 import Text from "./Text";
-import { ischecked } from "../features/navbar/Togglebutton";
+import { ischecked } from "../redux/actions/TogglebuttonSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Download } from "./Download";
 

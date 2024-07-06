@@ -5,7 +5,7 @@ import {
   applyEdgeChanges,
   applyNodeChanges,
   updateNodeLabel,
-} from "../features/flow/NewBoxSlice";
+} from "../redux/actions/NewBoxSlice";
 import { Handle, Position, useReactFlow } from "reactflow";
 import { nanoid } from "nanoid/non-secure";
 import Dagre from "@dagrejs/dagre";

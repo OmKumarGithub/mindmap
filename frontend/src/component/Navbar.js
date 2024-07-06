@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ison } from "../functions/navbar/hamburgerslice";
+import { ison } from "../redux/actions/hamburgerslice";
 import TogglerSwitch from "./TogglerSwitch";
 import {Link,NavLink} from 'react-router-dom'
 import { useAuth0 } from "@auth0/auth0-react";
@@ -17,8 +17,13 @@ function Navbar() {
     //  so that dom manipulation can be done by conditional rendering+
   }, [updatedvalue]);
 
+function toggleModal(){
+  dispatcher(ison());
+}
+
   const onclickhamburger = () => {
-    dispatcher(ison());
+    // dispatcher(ison());
+    toggleModal()
     console.log(updatedvalue);
   };
   // console.log(display)
@@ -192,15 +197,19 @@ function Navbar() {
               <li>
                 <NavLink
                   to="/"
+                  onClick={toggleModal}
                   className="block py-2 px-3 text-white bg-blue-700 rounded dark:bg-blue-600"
                   aria-current="page"
                 >
                   Home
                 </NavLink>
               </li>
-              <li>
+              <li 
+              
+              >
                 <NavLink
                   to="/about"
+                  onClick={toggleModal}
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   about
@@ -216,6 +225,7 @@ function Navbar() {
               </li> */}
               <li>
                 <NavLink
+                onClick={toggleModal}
                   to="/contact"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
@@ -224,6 +234,7 @@ function Navbar() {
               </li>
               <li>
                 <NavLink
+                onClick={toggleModal}
                   to="/workspace"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >

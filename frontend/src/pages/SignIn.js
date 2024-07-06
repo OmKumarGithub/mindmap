@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, useContext } from 'react';
 // import AuthContext from "./context/AuthProvider";
 import {Link,NavLink, useNavigate} from 'react-router-dom'
 
-import axios from '../api/axios';
+import axios from '../services/api/axios';
 // const LOGIN_URL = '/auth';
 
 const SignIn = () => {
