@@ -19,7 +19,7 @@ import ReactFlow, {
   // applyEdgeChanges
   // ******************************************* I *** spent 6 hrs just bcoz i made up a same name of reducer which was already there in reactflow library,
 } from "reactflow";
-import { applyNodeChanges, applyEdgeChanges } from "../features/flow/NewBoxSlice";
+import { applyNodeChanges, applyEdgeChanges } from "../redux/actions/NewBoxSlice";
 import { MagicWandIcon } from "@radix-ui/react-icons";
 import { Download } from "./Download";
 

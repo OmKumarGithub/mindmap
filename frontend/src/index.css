@@ -5,23 +5,6 @@
 
 
 
-.password-field input {
-  color: #3c763d;
-  background-color: #dff0d8;
-  border-color: #d6e9c6;
-}
-
-.password-field input:before {
-  content: url("./logo.svg");
-}
-
-.ginput_container input {
-  padding-left: 30px;
-  background-image: url("./logo.svg");
-  background-size: 16px 16px;
-  background-repeat: no-repeat;
-  background-position: 10px 1rem;
-}
 
 .left-inner-addon {
   position: relative;
@@ -44,4 +27,6 @@
 
 body {
   overflow: hidden;
+ background-image: linear-gradient(to right, var(--tw-gradient-stops)); 
 }
+

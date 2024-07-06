@@ -1,5 +1,5 @@
 import React from "react";
-import {ischecked} from "../features/navbar/Togglebutton";
+import {ischecked} from "../redux/actions/TogglebuttonSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 
