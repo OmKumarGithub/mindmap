@@ -67,6 +67,8 @@ function Flow() {
       onConnect={onConnect}
       connectionLineType={ConnectionLineType.SmoothStep}
       // style={{ background: "#E5E4E2"}}
+      // style={{marginBottom:-10 , padding :2}}
+      // snapToGrid={true}
       fitView 
       className=" "
     >

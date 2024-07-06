@@ -24,18 +24,22 @@ let style={
 
 
 
-<svg xmlns="http://www.w3.org/2000/svg" style={style } id="add" width="20px" height="20px" x="0" y="0" version="1.1" viewBox="0 0 29 29" className ="cursor-pointer hover:scale-110  ease-in-out duration-100" >
-<g
-        id="Icon-Set-Filled"
-        transform="translate(-2.7,-2.8) scale(1.2)"
-        fill="#1d4ed8"
-// className="  bg-gradient-to-r from-blue-500 to-[#1f2937]"
-      >
+<svg xmlns="http://www.w3.org/2000/svg" style={style} id="add" width="20px" height="20px" viewBox="0 0 29 29" className="cursor-pointer hover:scale-110 ease-in-out duration-100">
+<defs>
+  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" style={{ stopColor: '#60a5fa', stopOpacity: 1 }} />
+    <stop offset="100%" style={{ stopColor: '#1f2937', stopOpacity: 1 }} />
+  </linearGradient>
+</defs>
 
-<path d="M14.5 2C7.596 2 2 7.596 2 14.5S7.596 27 14.5 27 27 21.404 27 14.5 21.404 2 14.5 2zM21 15.5h-5.5V21a1 1 0 1 1-2 0v-5.5H8a1 1 0 1 1 0-2h5.5V8a1 1 0 1 1 2 0v5.5H21a1 1 0 1 1 0 2z"/>
+<g id="Icon-Set-Filled" transform="translate(-2.7,-2.8) scale(1.2)">
+  <path
+    d="M14.5 2C7.596 2 2 7.596 2 14.5S7.596 27 14.5 27 27 21.404 27 14.5 21.404 2 14.5 2zM21 15.5h-5.5V21a1 1 0 1 1-2 0v-5.5H8a1 1 0 1 1 0-2h5.5V8a1 1 0 1 1 2 0v5.5H21a1 1 0 1 1 0 2z"
+    fill="url(#gradient)"
+  />
 </g>
-
 </svg>
+
 
 
 
