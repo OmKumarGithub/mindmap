@@ -4,39 +4,32 @@ import { Background } from "reactflow";
 
 const position = { x: 0, y: 0 };
 const edgeType = "smoothstep";
-// const style = {
-//   background :"Red",
-//   position: "relative",top:10,
-//  backgroundImage: "linear-gradient(to right, var(red))",
 
-// }
 const initialState = {
-  nodes:[{
-    id: '1',
-    type: 'mindmap',
-    draggable:false,
-    data: { label: 'File Name ........' },
-    position,
-  },
-  {
-    id: '2',
-    type: 'mindmap',
-    data: { label: 'Demo text 2......' },
-    position,
-  },
-  {
-    id: '3',
-    type: 'mindmap',
-    data: { label: 'Demo text 3 .......' },
-    position,
-  },
-
-],
-  edges:[
-    { id: 'e12', source: '1', target: '2', type: edgeType, animated: true, },
-    { id: 'e13', source: '1', target: '3', type: edgeType, animated: true },
-   
- 
+  nodes: [
+    {
+      id: "1",
+      type: "mindmap",
+      draggable: false,
+      data: { label: "File Name ........" },
+      position,
+    },
+    {
+      id: "2",
+      type: "mindmap",
+      data: { label: "Demo text 2......" },
+      position,
+    },
+    {
+      id: "3",
+      type: "mindmap",
+      data: { label: "Demo text 3 ......." },
+      position,
+    },
+  ],
+  edges: [
+    { id: "e12", source: "1", target: "2", type: edgeType, animated: true },
+    { id: "e13", source: "1", target: "3", type: edgeType, animated: true },
   ],
   isNodesEdgesStateChanged: false,
   fun: true,
@@ -50,50 +43,17 @@ const rfSlice = createSlice({
       const { changes } = action.payload;
       state.nodes = JSON.parse(changes);
     },
-    
+
     applyEdgeChanges: (state, action) => {
       const { changes } = action.payload;
       state.edges = JSON.parse(changes);
     },
-    
 
     updateNodeLabel: (state, action) => {
       const { nodeId, label } = action.payload;
       for (let i = 0; i < state.nodes.length; i++) {
         if (state.nodes[i].id == nodeId) {
           state.nodes[i].data.value = label;
-          break;
-        }
-      }
-    },
-
-    addNodeTargetPosition: (state, action) => {
-      const { nodeId, bool } = action.payload;
-      for (let i = 0; i < state.nodes.length; i++) {
-        if (state.nodes[i].id == nodeId) {
-          Object.defineProperty(state.nodes[i], "targetPosition", {
-            value: bool,
-          });
-        }
-      }
-    },
-
-    addNodeSourcePosition: (state, action) => {
-      const { nodeId, bool } = action.payload;
-      for (let i = 0; i < state.nodes.length; i++) {
-        if (state.nodes[i].id == nodeId) {
-          Object.defineProperty(state.nodes[i], "sourcePosition", {
-            value: bool,
-          });
-        }
-      }
-    },
-
-    setNodePosition: (state, action) => {
-      const { nodeId, x, y } = action.payload;
-      for (let i = 0; i < state.nodes.length; i++) {
-        if (state.nodes[i].id == nodeId) {
-          state.nodes[i].position = { x: x, y: y };
           break;
         }
       }
@@ -122,24 +82,10 @@ const rfSlice = createSlice({
       // state.edges: [...state.edges,{ id: edgeid, source: parentid, target: nid, type: edgeType, animated: true,},],
     },
 
-    ChangeisNodesEdgesStateChanged: (state, action) => {
-      const { bool } = action.payload;
-      state.isNodesEdgesStateChanged = Boolean(bool);
-    },
-
     setfun: (state, action) => {
       // const { pfun } = action.payload;
       state.fun = !state.fun;
     },
-
-  
-
-
-
-
-
-
-
   },
 });
 
@@ -149,10 +95,6 @@ export const {
   updateNodeLabel,
   addChildNode,
   setfun,
-  ChangeisNodesEdgesStateChanged,
-  setNodePosition,
-  addNodeSourcePosition,
-  addNodeTargetPosition,
 } = rfSlice.actions;
 
 export default rfSlice.reducer;

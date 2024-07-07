@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^2.2.4",
+    "@clerk/clerk-react": "^5.2.7",
     "@dagrejs/dagre": "^1.1.2",
     "@emotion/react": "^11.11.4",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
