@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { ison } from "../redux/actions/hamburgerslice";
 import TogglerSwitch from "./TogglerSwitch";
 import {Link,NavLink} from 'react-router-dom'
-import { useAuth0 } from "@auth0/auth0-react";
+// import { useAuth0 } from "@auth0/auth0-react";
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/clerk-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import SignIn from "../pages/SignIn";
 function Navbar() {
   const dispatcher = useDispatch();
-  const { loginWithRedirect ,isAuthenticated,logout,user} = useAuth0();
+  // const { loginWithRedirect ,isAuthenticated,logout,user} = useAuth0();
   const updatedvalue = useSelector((state) => state.togglehamburger);
 
   useEffect(() => {
@@ -96,12 +97,12 @@ function toggleModal(){
                   </NavLink>
                 </li>
                 {
-                  isAuthenticated?( <li>
+                  true?( <li>
                   <NavLink
                     to="/dashboard"
-                    className={({isActive})=>`block py-2 px-3 md:p-0 rounded ${isActive?"text-blue-500":"text-black  dark:text-white"}
-                    text-black hover:text-blue-400 
-                     dark:hover:text-blue-400 `}
+                    // className={({isActive})=>`block py-2 px-3 md:p-0 rounded ${isActive?"text-blue-500":"text-black  dark:text-white"}
+                    // text-black hover:text-blue-400 
+                    //  dark:hover:text-blue-400 `}
                   >
                     Dashboard                  
                     </NavLink>
@@ -116,33 +117,34 @@ function toggleModal(){
          
 
 
-{isAuthenticated?(
+{/* {isAuthenticated?(
 <span className="p-1 font-semibold border shadow-md rounded-md mr-2 pr-2 pl-2 dark:text-white dark:border-white cursor-pointer">
 <FontAwesomeIcon className=" pr-2" icon={faUser} /> 
 {user.name}
 
  
 </span>):<></>
-}      
+}       */}
             <li className=" list-none">
 
 {
-  isAuthenticated?(
+  false?(
     <button 
                     className="text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+            // onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+            >
       Log Out
     </button>
   ):(
     <>
-        <NavLink to={"/mindmaps"}>
+    <SignInButton>
          <button 
                     className="text-white mr-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-             >Log In</button></NavLink>
-          <NavLink to={"/signup"}>
+             >Log In</button></SignInButton>
+          <SignUpButton>
          <button 
                     className="text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-             >Sign Up</button></NavLink>
+             >Sign Up</button></SignUpButton>
 
            </>  
              
